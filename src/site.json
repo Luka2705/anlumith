@@ -1,0 +1,46 @@
+{
+  "domain": "",
+  "company": {
+    "legalName": "Luka Juric",
+    "legalForm": "Einzelunternehmen · ANLUMITH",
+    "street": "Obstweg 5",
+    "postalCode": "70771",
+    "city": "Leinfelden-Echterdingen",
+    "country": "Deutschland",
+    "email": "lukamateo.juric@icloud.com",
+    "phone": "+49 178 2380948",
+    "representative": "",
+    "register": "",
+    "vatId": "",
+    "businessId": "",
+    "additionalLegalInformation": ""
+  },
+  "legal": {
+    "reviewed": true,
+    "updated": "21. September 2026",
+    "disputeResolution": "",
+    "hostingRetention": "",
+    "emailProvider": "Apple iCloud Mail. Anbieter für Nutzer im Europäischen Wirtschaftsraum ist Apple Distribution International Limited, Hollyhill Industrial Estate, Hollyhill, Cork, Irland.",
+    "emailInternationalTransfers": "",
+    "cloudflareTransferSafeguards": "",
+    "cloudflareCookies": "",
+    "dataProtectionOfficer": ""
+  },
+  "products": [
+    {
+      "name": "Echo Music",
+      "description": "Jeden Tag einen Song teilen. Mit Freunden neue Musik entdecken.",
+      "url": "https://echo-ee3bf.web.app",
+      "theme": "echo",
+      "appStore": "https://apps.apple.com/de/app/echo-music/id6749182326",
+      "icon": "/echo-icon.png"
+    },
+    {
+      "name": "MyBasar",
+      "description": "Der Basar. Einfach online.",
+      "url": "https://mybasar-3756a.web.app",
+      "theme": "basar",
+      "icon": "shopping-bag"
+    }
+  ]
+}
