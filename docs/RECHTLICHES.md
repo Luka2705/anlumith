@@ -6,7 +6,7 @@ Die Texte sind auf eine Unternehmenswebsite mit Produktlinks, E-Mail- und Telefo
 
 - Marke ANLUMITH; Anbieter und datenschutzrechtlich Verantwortlicher Luka Juric, Einzelunternehmen.
 - Obstweg 5, 70771 Leinfelden-Echterdingen, Deutschland.
-- lukamateo.juric@icloud.com und +49 178 2380948.
+- luka@anlumith.com und +49 178 2380948.
 - Kein eigenes Tracking oder eingebetteter Fremdinhalt, Newsletter, Login, Shop oder Kontaktformular.
 - Cloudflare Pages als vorgesehenes Hosting, iCloud Mail als Kontaktpostfach.
 - Impressum von jeder Seite aus erreichbar. Die Datenschutztexte der Apps werden nicht durch diese Website ersetzt.
