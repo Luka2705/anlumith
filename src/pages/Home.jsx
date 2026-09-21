@@ -5,7 +5,7 @@ export default function Home() {
   return <main id="inhalt" className="wrap">
     <section className="hero" aria-labelledby="hero-title">
       <p className="eyebrow">Unabhängige Software. Von ANLUMITH.</p>
-      <h1 id="hero-title">Gute Ideen.<br /><span>Einfach Software.</span></h1>
+      <h1 id="hero-title"><span className="hero-title-line">Gute Ideen.</span>{' '}<span className="hero-title-line hero-title-line-muted">Einfach Software.</span></h1>
       <p className="intro">Wir entwickeln digitale Produkte, die ihren eigenen Weg gehen. Das ist erst der Anfang.</p>
     </section>
     <section id="produkte" aria-labelledby="products-title">

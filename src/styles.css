@@ -19,7 +19,13 @@ a:focus-visible,summary:focus-visible{outline:3px solid var(--link);outline-offs
 .eyebrow{font-size:.875rem;font-weight:600;letter-spacing:.02em;color:var(--muted);margin:0 0 22px}
 h1,h2,h3,p{margin-top:0}
 h1{font-size:clamp(3rem,7.2vw,5rem);line-height:1.06;font-weight:650;letter-spacing:-.058em;margin-bottom:26px}
-.hero h1 span{color:#77777d}
+.hero-title-line{display:block}
+.hero-title-line-muted{color:#77777d}
+@keyframes hero-title-appear{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@media screen and (prefers-reduced-motion:no-preference){
+  .hero-title-line{animation:hero-title-appear 780ms cubic-bezier(.22,1,.36,1) 70ms backwards}
+  .hero-title-line:nth-child(2){animation-delay:200ms}
+}
 .intro{font-size:clamp(1.125rem,2.2vw,1.375rem);line-height:1.5;letter-spacing:-.02em;max-width:550px;color:var(--muted);margin:0}
 .section-label{display:flex;justify-content:space-between;gap:20px;align-items:baseline;margin-bottom:20px}
 .section-label h2{font-size:1.125rem;letter-spacing:-.025em;margin:0;font-weight:600}
