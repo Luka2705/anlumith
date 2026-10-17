@@ -4,6 +4,8 @@ import { createServer } from 'vite';
 import { pageSeo, seoTags, investorRoutes, safeJson } from '../src/investor/seo.js';
 import { robotsTxt, sitemapXml } from '../server/search-assets.js';
 import { en, de, es } from '../src/investor/translations.js';
+import { createElement } from 'react';
+import { renderToString } from 'react-dom/server';
 
 test('SEO tags use canonical language URLs, reciprocal alternates and factual app identity', () => {
   for (const locale of ['en', 'de', 'es']) {
@@ -63,5 +65,16 @@ test('production renderer emits complete localized content without browser globa
     assert.ok(render('/impressum/', 'de').includes('Impressum'));
     assert.ok(render('/bogus/privacy', 'en').includes(en.notFound));
     assert.ok(render('/de/privacy/extra', 'de').includes(de.notFound));
+    // Match the first hydrated tree to the HTML's locale and rendering path,
+    // even when the browser initially prefers German or requested an unknown URL.
+    const { default: clientI18n } = await server.ssrLoadModule('/src/investor/i18n.js');
+    const { default: ClientApp } = await server.ssrLoadModule('/src/App.jsx');
+    for (const initialPath of ['/', '/en/not-found']) {
+      await clientI18n.changeLanguage('de');
+      const serverMarkup = render(initialPath, 'en');
+      await clientI18n.changeLanguage('en');
+      const clientMarkup = renderToString(createElement(ClientApp, { pathname: initialPath, initialLocale: 'en' }));
+      assert.equal(clientMarkup, serverMarkup, `${initialPath}: hydration language/path contract`);
+    }
   } finally { await server.close(); }
 });
