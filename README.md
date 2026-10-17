@@ -1,6 +1,10 @@
 # ANLUMITH
 
-Unternehmenswebsite mit **React und Vite**. Die `index.html` liegt direkt im Projektordner. Kein eigener HTML-Generator. Keine Tracker, externen Schriftarten oder eigenen Cookies.
+Echo Music investor V2 is implemented in the existing React/Vite app at `/en`, `/de`, and `/es`. The company homepage is retained at `/company/`. See [Investor implementation and integration](docs/INVESTOR.md) for data provenance, Firebase/Pages setup, localization, checks and remaining release requirements. Run `npm test` and `npm run build` for local verification. Local metrics now read Echo's existing hourly Firestore cache server-side using the installed Firebase CLI login; the supplied historical snapshot is a labeled fallback. Hosted metrics and online email delivery still require deployment configuration.
+
+SEO now prerenders complete HTML, includes `/en/investors`, `/de/investors`, `/es/investors`, responsive images, social previews and Apple app banners. Read [SEO implementation and release requirements](docs/SEO.md) and the [30-day investor growth plan](docs/INVESTOR-GROWTH.md). Validate the built pages with `npm run check:seo`. Search indexing remains blocked until the existing release requirements and canonical domain are completed.
+
+Unternehmenswebsite mit **React und Vite**. Die `index.html` liegt direkt im Projektordner; der Build rendert die React-Seiten vollständig als HTML vor. Keine Tracker, externen Schriftarten oder eigenen Cookies.
 
 ## Starten
 
@@ -41,7 +45,7 @@ Die [Cloudflare-Anleitung](docs/CLOUDFLARE.md) erklärt die GitHub-Anbindung. Da
 
 Die [rechtlichen offenen Punkte](docs/RECHTLICHES.md) bleiben vor Veröffentlichung abzugleichen. `build:production` prüft ihre Vollständigkeit, nicht ihre rechtliche Richtigkeit. Solange Angaben fehlen bzw. `legal.reviewed` nicht `true` ist, bleiben die Texte als Entwurf markiert und die Website erhält `noindex`. `noindex` ist kein Zugriffsschutz.
 
-Seiten: `/`, `/kontakt/`, `/impressum/`, `/datenschutz/`, `/cookies/`. Die Navigation verwendet normale Links, deshalb funktionieren Zurück, Neuladen und direkte Seitenaufrufe. Für unbekannte Pfade gibt es eine Nicht-gefunden-Ansicht. Cloudflare Pages liefert im SPA-Modus dabei HTTP 200.
+Echo-Investorenseiten: `/en`, `/de`, `/es` mit lokalisierten Unterseiten. Unternehmensseiten: `/company/`, `/kontakt/`, `/impressum/`, `/datenschutz/`, `/cookies/`. Die Navigation verwendet normale Links, deshalb funktionieren Zurück, Neuladen und direkte Seitenaufrufe. Für unbekannte Pfade gibt es eine Nicht-gefunden-Ansicht. Cloudflare Pages liefert im SPA-Modus dabei HTTP 200.
 
 ## Gestaltung und Quellen
 

@@ -18,4 +18,4 @@ export const requiredFields = {
 export const pendingFields = Object.entries(requiredFields)
   .filter(([, value]) => !value?.trim()).map(([key]) => key);
 export const isDraft = legal.reviewed !== true || pendingFields.length > 0;
-export const routes = ['/', '/kontakt/', '/impressum/', '/datenschutz/', '/cookies/'];
+export const routes = ['/', '/company/', '/kontakt/', '/impressum/', '/datenschutz/', '/cookies/', ...['en', 'de', 'es'].flatMap(locale => [`/${locale}`, ...['investors', 'privacy', 'imprint', 'cookies'].map(page => `/${locale}/${page}`)])];
