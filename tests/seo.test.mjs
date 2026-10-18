@@ -125,9 +125,9 @@ test('production renderer emits complete localized content without browser globa
       assert.equal((home.match(/<h1\b/g) || []).length, 1);
       const brief = render(`/${locale}/investors`, locale);
       assert.ok(brief.includes(strings.investorPosition));
-      for (const key of ['investmentBody', 'investmentProof', 'revenueTitle', 'revenueStatus', 'pilotTitle', 'pilotMeasure', 'fundingTitle', 'competitiveBody', 'economicsBody', 'marketSources']) assert.ok(brief.includes(escapeHtml(strings[key])), `${locale}: ${key}`);
-      assert.ok(brief.includes('https://performance-partners.apple.com/partners') && brief.includes('https://realtimeinsights.sonymusic.com/'), `${locale}: primary evidence for programme gate and existing competition`);
-      for (const model of [...strings.revenueModels, ...strings.fundingSteps]) assert.ok(brief.includes(escapeHtml(model.title)), `${locale}: business model and investment milestones`);
+      for (const key of ['investmentBody', 'investmentProof', 'pilotTitle', 'pilotMeasure', 'fundingTitle']) assert.ok(brief.includes(escapeHtml(strings[key])), `${locale}: ${key}`);
+      assert.ok(!brief.includes('class="industry-revenue"') && !brief.includes('class="industry-economics"'), `${locale}: human community story leads without commercial sections`);
+      for (const model of strings.fundingSteps) assert.ok(brief.includes(escapeHtml(model.title)), `${locale}: community development directions`);
       assert.equal((brief.match(/id="opportunity"/g) || []).length, 1, `${locale}: single industry opportunity section`);
       assert.ok(brief.includes(strings.diaryTitle), `${locale}: investor product evidence`);
       assertLocalizedScreenshots(brief, locale, ['diary-original']);
