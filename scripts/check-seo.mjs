@@ -23,6 +23,6 @@ for (const route of investorRoutes) {
 }
 const missing = await readFile('dist/404.html', 'utf8');
 assert.ok(missing.includes('noindex, follow'));
-for (const image of ['echo/feed-original-600.webp', 'echo/map-americas-600.webp', 'echo/map-asia-600.webp']) assert.ok((await stat(`dist/${image}`)).size < 100000, `${image}: optimized asset`);
+for (const image of ['echo/feed-original-600.webp', 'echo/diary-original-600.webp', 'echo/map-americas-600.webp', 'echo/map-asia-600.webp']) assert.ok((await stat(`dist/${image}`)).size < 100000, `${image}: optimized asset`);
 console.log(`${investorRoutes.length} localized pages: complete HTML, image assets, metadata and 404 checks passed.`);
 if (isDraft || !site.domain) console.log('Indexing remains disabled pending the existing release requirements; no release guard was bypassed.');

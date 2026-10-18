@@ -103,6 +103,12 @@ Features include skip navigation, semantic sections, headings, labeled inputs, a
 
 ## Authentic visual sources
 
+The product section now combines the personal music diary, discovery beyond familiar recommendations, and supported music-service actions. The home page and investor brief reuse the same diary module; it replaces the previous overlapping product phones on the home page. The compact public world map remains separate.
+
+Read-only inspection of the existing app confirms a monthly profile calendar and personal map of song posts (`account_view_widget.dart`, `month_calendar_widget.dart`, `memories_page.dart`, `user_map_widget.dart`). Dates refer to posting time, and locations are optional. Copy describes revisiting shared music rather than an automatically collected, complete listening history.
+
+`music_service.dart` searches Apple Music and SoundCloud; `share_service.dart` opens Spotify through ISRC/title search and Apple Music through a catalogue link or search. The visible copy describes these available paths rather than universal three-service playback, guaranteed track matching or playlist migration. The feed itself has ranking logic, so “break out of your music bubble” is framed as discovering through people and places, without claiming an algorithm-free product.
+
 Original logo: existing `public/echo-icon.png`.
 
 Official [echo music App Store listing](https://apps.apple.com/de/app/echo-music/id6749182326); screenshots fetched via Apple's public lookup API. Local files:
@@ -115,7 +121,9 @@ The displayed product images now use the three original screenshots supplied by 
 
 - `public/echo/feed-original.png`: current music feed; displayed in the hero and product section.
 - `public/echo/map-americas.png`: world map with song-cover markers across the Americas.
-- `public/echo/map-asia.png`: world map with song-cover markers across Asia and the Pacific; also displayed in the product section.
+- `public/echo/map-asia.png`: world map with song-cover markers across Asia and the Pacific; available in the original app screenshot gallery.
+
+The owner additionally supplied `public/echo/diary-original.png` on October 18, 2026: the German profile screen with calendar and music memories. The complete 1206×2622 original is preserved and linked from the diary module. Responsive 360/600/900px WebP files are generated without retouching or cropping; the 600px asset is 30,458 bytes. Original and supplied source share SHA-256 `6fb46521ec6d168723ec74ca17336338cfe18550af59d69f0b31fed9cae4e3be`. The screenshot's original German interface, profile handle and captured numbers are product imagery, not website metrics or a fabricated localization.
 
 The dedicated `#world-map` section contains a compact, fixed world overview of the last 72 hours of public Firebase song posts, with red dots for approximate 1° regions. Zoom and the region table have been removed. A verified fresh snapshot displays “Live view · past 72 hours”, with the hourly cadence and actual snapshot time alongside it; errors/overdue data remove the live label. The map is also embedded on each investor page. The original app screenshots remain available in a disclosure below the home-page map, preserving their attribution and app interface. Each links to the unchanged original PNG. All map copy, status messages and image alternatives are translated into EN/DE/ES. No AI imagery, generated people, stock images or fabricated screenshots are used. Android URL is retained from echo music's existing frontend landing page. See [GLOBAL-COMMUNITY-MAP.md](GLOBAL-COMMUNITY-MAP.md) for privacy, query, cache and deployment details.
 
@@ -143,3 +151,5 @@ The revised compact map, fresh-data live label and combined three-figure investo
 6. An approved, semantically explicit public historical-series contract if trend charts are added.
 
 Only claim live metrics or functioning hosted email delivery where their runtime integration is verified. The organic-growth/€0-advertising statement is owner-confirmed, not an independently audited acquisition channel mix. Do not infer retention, virality, zero acquisition costs or numerical projections from it.
+
+The diary layout and German feature copy were visually checked in desktop Safari against the running local site on October 18, 2026. The complete screenshot and its calendar remain visible, with a link to the original. The new diary asset, feature text and investor-page reuse are covered by the existing localized SSR/SEO checks.

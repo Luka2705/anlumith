@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ArrowUpRight, ArrowDown, ArrowRight, Check, Plus, Music2, Users, Globe2, RefreshCw, Sprout } from 'lucide-react';
+import { ArrowUpRight, ArrowDown, ArrowRight, ArrowLeftRight, CalendarDays, Compass, Check, Plus, Music2, Globe2, RefreshCw, Sprout } from 'lucide-react';
 import i18n, { detectLocale, formatNumber, locales } from './i18n.js';
 import { historicalSnapshot, HOUR, METRICS, PERIODS, snapshotState, validateSnapshot } from './metrics.js';
 import { company, musicBrand } from '../site.js';
@@ -8,10 +8,10 @@ import { updateSeo } from './seo.js';
 import { screenshotImages } from './image-assets.js';
 import CommunityWorldMap from './CommunityWorldMap.jsx';
 import './investor-proof.css';
+import './music-diary.css';
 
 const appStore = 'https://apps.apple.com/de/app/echo-music/id6749182326';
 const playStore = 'https://play.google.com/store/apps/details?id=com.anlumith.echo';
-const icons = [Music2, Users, Globe2];
 const mail = t => `mailto:${company.email}?subject=${encodeURIComponent(`${musicBrand.name} — ${t('deck')}`)}`;
 
 function OrganicGrowth({ t }) {
@@ -24,6 +24,22 @@ function Screenshot({ name, alt, priority = false, sizes = '(max-width: 600px) 4
     loading={priority ? 'eager' : 'lazy'} fetchPriority={priority ? 'high' : undefined} decoding="async" />;
 }
 
+function DiaryProduct({ t, embedded = false }) {
+  return <section id="product" className={`music-diary${embedded ? ' music-diary--embedded' : ' section-space'}`} aria-labelledby="diary-title">
+    <div className={`music-diary-layout${embedded ? '' : ' echo-wrap'}`}>
+      <div className="music-diary-content"><p className="echo-eyebrow">{t(embedded ? 'diaryEyebrow' : 'productEyebrow')}</p><h2 id="diary-title" className="display-heading">{t('diaryTitle')}</h2><p className="section-body">{t('diaryBody')}</p>
+        <div className="music-diary-features">{[
+          { icon: CalendarDays, title: 'diaryMemoryTitle', body: 'diaryMemoryBody' },
+          { icon: Compass, title: 'discoveryTitle', body: 'discoveryBody' },
+          { icon: ArrowLeftRight, title: 'ecosystemTitle', body: 'ecosystemBody' },
+        ].map(({ icon: Icon, title, body }) => <article key={title}><Icon size={19} aria-hidden="true" /><div><h3>{t(title)}</h3><p>{t(body)}</p></div></article>)}</div>
+        <div className="store-links"><a href={appStore}>{t('ios')}<ArrowUpRight size={16} /></a><a href={playStore}>{t('android')}<ArrowUpRight size={16} /></a></div>
+      </div>
+      <figure className="music-diary-visual"><a href={screenshotImages['diary-original'].original} target="_blank" rel="noreferrer" aria-label={t('diaryOriginal')}><Screenshot name="diary-original" alt={t('diaryVisual')} sizes="(max-width: 600px) 240px, 280px" /></a><figcaption><span>{t('diaryCaption')}</span><a href={screenshotImages['diary-original'].original} target="_blank" rel="noreferrer">{t('diaryOriginal')}<ArrowUpRight size={12} /></a></figcaption></figure>
+    </div>
+  </section>;
+}
+
 function InvestorBrief({ data, status, t, locale, n }) {
   return <main id="echo-content" className="echo-wrap investor-brief section-space">
     <p className="echo-eyebrow">{t('investorBrief')}</p><h1 className="display-heading">{t('investorPageTitle')}</h1>
@@ -34,6 +50,7 @@ function InvestorBrief({ data, status, t, locale, n }) {
       <dl className="brief-numbers">{['newUsers', 'contributors', 'sharedSongs'].map(key => <div key={key}><dt>{t(key)}</dt><dd>{n(data.periods['3m'][key])}</dd><small>{t('proofPeriod')}</small></div>)}</dl>
       <p className="section-body">{t(data.source === 'firebase' ? 'liveContributorDef' : 'contributorDef')}</p><details className="organic-source"><summary>{t('definitions')}</summary><p>{t('organicSource')}</p></details><a className="text-link" href={`/${locale}#traction`}>{t('definitions')}<ArrowUpRight size={17} /></a>
     </section>
+    <DiaryProduct t={t} embedded />
     <CommunityWorldMap locale={locale} t={t} embedded />
     <section className="brief-story"><div><h2>{t('investorOpportunity')}</h2><p>{t('investorOpportunityBody')}</p><a className="text-link" href={`/${locale}#world-map`}>{t('mapNav')}<ArrowUpRight size={17} /></a></div><div><h2>{t('founderTitle')}</h2><p>{t('founderBody')}</p><a className="text-link" href={mail(t)}>{t('founder')}<ArrowUpRight size={17} /></a></div></section>
     <section id="contact" className="brief-contact"><div><p className="echo-eyebrow">{t('contactEyebrow')}</p><h2>{t('investorDiligence')}</h2><OrganicGrowth t={t} /><p className="section-body">{t('organicContact')}</p><p className="section-body">{t('investorDiligenceBody')}</p><a className="text-link" href={mail(t)}>{company.email}<ArrowUpRight size={17} /></a></div><ContactForm t={t} locale={locale} /></section>
@@ -192,7 +209,7 @@ export default function Investor({ initialLocale, initialPath } = {}) {
       <section id="moment" className="traction-moment"><div className="echo-wrap"><div className="moment-heading"><p className="echo-eyebrow">{t('actual')}</p><h2>{t('moment1')}<br /><span>{t('moment2')}</span></h2><p>{t('momentIntro')}</p></div><div className="moment-total"><strong className="number-reveal">{n(data.totalUsers)}</strong><div><span>{t('totalUsers')}</span><small>{t(metrics.state === 'historical' ? 'historicalShort' : metrics.state)}</small></div></div>
       <div className="moment-foot"><span>{t('organicGrowth')}</span><a href="#traction">{t('seeTraction')}<ArrowDown size={16} /></a></div></div></section>
 
-      <section id="product" className="echo-product echo-wrap section-space"><div className="product-copy"><p className="echo-eyebrow">{t('productEyebrow')}</p><h2 className="display-heading">{t('productTitle')}</h2><p className="section-body">{t('productBody')}</p><ul className="product-features">{['productFeature1', 'productFeature2', 'mapFeature'].map((key, index) => { const Icon = icons[index]; return <li key={key}><Icon size={19} />{t(key)}</li>; })}</ul><div className="store-links"><a href={appStore}>{t('ios')}<ArrowUpRight size={16} /></a><a href={playStore}>{t('android')}<ArrowUpRight size={16} /></a></div></div><div className="product-visuals"><div className="product-phone phone-back original-screen"><Screenshot name="map-asia" alt={t('mapVisualAsia')} /></div><div className="product-phone phone-front original-screen"><Screenshot name="feed-original" alt={t('feedVisual')} /></div><span className="visual-source">{t('providedVisuals')}</span></div></section>
+      <DiaryProduct t={t} />
 
       <CommunityWorldMap locale={locale} t={t} />
       <details className="map-product-details"><summary className="echo-wrap">{t('geoAppScreenshots')}<Plus size={17} /></summary><div className="echo-wrap world-map-layout"><div className="world-map-copy"><p className="echo-eyebrow"><Globe2 size={16} />{t('mapEyebrow')}</p><h2 id="world-map-title" className="display-heading">{t('mapTitle')}</h2><p className="section-body">{t('mapBody')}</p><p className="section-body">{t('mapDetail')}</p><a className="text-link" href={appStore}>{t('mapApp')}<ArrowUpRight size={18} /></a><p className="map-image-note">{t('mapImageNote')}</p></div><div className="world-map-gallery">{[{ source: 'map-americas', caption: 'mapAmericas', alt: 'mapVisualAmericas' }, { source: 'map-asia', caption: 'mapAsia', alt: 'mapVisualAsia' }].map(image => <figure key={image.source}><a className="map-original-link" href={`/echo/${image.source}.png`} target="_blank" rel="noreferrer" aria-label={`${t('openOriginal')} — ${t(image.caption)}`}><Screenshot name={image.source} alt={t(image.alt)} /></a><figcaption><span>{t(image.caption)}</span><a href={`/echo/${image.source}.png`} target="_blank" rel="noreferrer">{t('openOriginal')}<ArrowUpRight size={13} /></a></figcaption></figure>)}</div></div></details>

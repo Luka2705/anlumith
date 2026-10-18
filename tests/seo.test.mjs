@@ -59,6 +59,8 @@ test('production renderer emits complete localized content without browser globa
     for (const [locale, strings] of Object.entries({ en, de, es })) {
       const home = render(`/${locale}`, locale);
       assert.ok(home.includes(strings.productSummary));
+      assert.ok(home.includes(strings.diaryTitle) && home.includes(strings.discoveryTitle) && home.includes(strings.ecosystemBody), `${locale}: diary, discovery and supported listening options`);
+      assert.ok(home.includes('/echo/diary-original-600.webp') && home.includes('/echo/diary-original.png'), `${locale}: genuine diary screenshot and original`);
       assert.ok(home.split(strings.organicGrowth).length - 1 >= 3, `${locale}: organic growth is repeated in key home sections`);
       assert.ok(home.includes(strings.organicSource), `${locale}: owner provenance remains available`);
       assert.ok(home.includes(strings.faqTitle));
@@ -69,6 +71,7 @@ test('production renderer emits complete localized content without browser globa
       assert.equal((home.match(/<h1\b/g) || []).length, 1);
       const brief = render(`/${locale}/investors`, locale);
       assert.ok(brief.includes(strings.investorPosition));
+      assert.ok(brief.includes(strings.diaryTitle) && brief.includes('/echo/diary-original-600.webp'), `${locale}: investor product evidence`);
       assert.ok(brief.split(strings.organicGrowth).length - 1 >= 3, `${locale}: investor introduction, evidence and contact repeat the organic message`);
       assert.ok(brief.includes(strings.organicSource), `${locale}: investor provenance`);
       assert.ok(brief.includes(strings.founderTitle));

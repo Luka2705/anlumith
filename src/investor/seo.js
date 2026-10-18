@@ -34,7 +34,7 @@ export function pageSeo({ pathname = '/', locale = 'en', domain = site.domain, d
     ...(!page || page === 'investors' ? [{ '@type': 'MobileApplication', '@id': `${root}#app`, name: 'echo music',
       description: strings.productSummary, operatingSystem: 'iOS, Android', applicationCategory: 'SocialNetworkingApplication',
       publisher: { '@id': `${root}#organization` }, creator: { '@id': `${root}#founder` },
-      image, screenshot: ['feed-original-600.webp', 'map-americas-600.webp', 'map-asia-600.webp'].map(file => new URL(`/echo/${file}`, root).href),
+      image, screenshot: ['feed-original-600.webp', 'diary-original-600.webp', 'map-americas-600.webp', 'map-asia-600.webp'].map(file => new URL(`/echo/${file}`, root).href),
       installUrl: [APP_STORE, PLAY_STORE], sameAs: [APP_STORE, PLAY_STORE] }] : []),
   ] : [];
   return { title, description, canonical, alternates, image, locale, known,

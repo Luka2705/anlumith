@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const outputDirectory = resolve(root, 'public/echo');
 const widths = [360, 600, 900];
-const imageNames = ['feed-original', 'map-americas', 'map-asia'];
+const imageNames = ['feed-original', 'map-americas', 'map-asia', 'diary-original'];
 const manifest = {};
 const measurements = [];
 

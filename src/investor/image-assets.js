@@ -20,6 +20,13 @@ export const screenshotImages = Object.freeze({
     "original": "/echo/map-asia.png",
     "width": 1206,
     "height": 2622
+  },
+  "diary-original": {
+    "src": "/echo/diary-original-600.webp",
+    "srcSet": "/echo/diary-original-360.webp 360w, /echo/diary-original-600.webp 600w, /echo/diary-original-900.webp 900w",
+    "original": "/echo/diary-original.png",
+    "width": 1206,
+    "height": 2622
   }
 });
 
