@@ -5,7 +5,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import { createElement } from 'react';
 import { en, de, es } from '../src/investor/translations.js';
 
-test('localized investor pages, legal routes, locale preference and accessible charts render', async () => {
+test('localized investor summaries, compact map, legal routes and locale preference render', async () => {
   const originalWindow = globalThis.window;
   const originalStorage = globalThis.localStorage;
   const values = new Map();
@@ -14,6 +14,13 @@ test('localized investor pages, legal routes, locale preference and accessible c
   const server = await createServer({ server: { middlewareMode: true, ws: false, hmr: false }, appType: 'custom' });
   try {
     const { default: Investor } = await server.ssrLoadModule('/src/investor/Investor.jsx');
+    const { isLiveMapSnapshot } = await server.ssrLoadModule('/src/investor/CommunityWorldMap.jsx');
+    const now = Date.now(), snapshot = { source: 'firebase', generatedAt: now - 3_600_000 };
+    assert.equal(isLiveMapSnapshot(null, { now, landReady: true }), false);
+    assert.equal(isLiveMapSnapshot(snapshot, { now, landReady: true }), true);
+    assert.equal(isLiveMapSnapshot(snapshot, { now, landReady: false }), false);
+    assert.equal(isLiveMapSnapshot(snapshot, { now, landReady: true, failed: true }), false);
+    assert.equal(isLiveMapSnapshot({ ...snapshot, generatedAt: now - 3 * 3_600_000 }, { now, landReady: true }), false);
     const { default: i18n, detectLocale, formatNumber } = await server.ssrLoadModule('/src/investor/i18n.js');
     assert.equal(detectLocale('/', ['fr-FR']), 'en');
     assert.equal(detectLocale('/', ['de-DE', 'en']), 'de');
@@ -29,17 +36,24 @@ test('localized investor pages, legal routes, locale preference and accessible c
       await i18n.changeLanguage(locale);
       const markup = renderToStaticMarkup(createElement(Investor));
       assert.ok(markup.includes(translation.hero1), locale);
-      assert.ok(markup.includes(translation.dashboardTitle), locale);
+      assert.ok(markup.includes(translation.proofTitle), locale);
+      assert.ok(markup.includes(translation.proofDetails.replaceAll('&', '&amp;')), locale);
+      for (const title of ['proofAcquisitionTitle', 'proofParticipationTitle', 'proofSharingTitle']) assert.ok(markup.includes(translation[title]), locale);
+      assert.ok(!markup.includes(translation.storyEyebrow), locale);
       assert.ok(markup.includes(translation.historical), locale);
       assert.ok(markup.includes(translation.unknownDate), locale);
       assert.ok(markup.includes(translation.formLabel), locale);
       assert.ok(markup.includes(`href="/${locale}/privacy"`), locale);
       assert.ok(markup.includes('aria-pressed="true"'), locale);
-      assert.equal((markup.match(/role="img"/g) || []).length, 5, locale);
-      assert.equal((markup.match(/<desc>/g) || []).length, 5, locale);
+      assert.equal((markup.match(/role="img"/g) || []).length, 1, locale);
+      assert.equal((markup.match(/<desc>/g) || []).length, 1, locale);
       assert.ok(markup.includes(translation.geoNoData), locale);
       assert.ok(markup.includes('community-map-svg'), locale);
       assert.ok(!markup.includes('class="community-map-dot'), locale);
+      assert.ok(!markup.includes(translation.geoLive), `${locale}: no live claim before verification`);
+      assert.ok(!markup.includes(translation.geoRegionList), locale);
+      assert.ok(!markup.includes(translation.geoZoomIn), locale);
+      assert.ok(!markup.includes('onPointerDown') && !markup.includes('data-zoomed'), locale);
       assert.ok(markup.includes('type="email"') && markup.includes('autoComplete="email"'), locale);
       assert.ok(markup.includes('aria-current="true"'), locale);
       assert.ok(markup.includes(formatNumber(27815, locale)), locale);

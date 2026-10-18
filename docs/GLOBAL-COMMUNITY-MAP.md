@@ -1,6 +1,6 @@
 # Global community map
 
-The home and investor pages show a real world map of public song-sharing activity during a rolling 72-hour snapshot. The local server reads Firebase; a hosted adapter is prepared but not deployed. No example or random dots are substituted when data is unavailable.
+The home and investor pages show a compact world map of public song-sharing activity during a rolling 72-hour snapshot. The local server reads Firebase; a hosted adapter is prepared but not deployed. No example or random dots are substituted when data is unavailable.
 
 ## Public data contract
 
@@ -17,7 +17,9 @@ Verified through the running local `/api/geography` on October 18, 2026: HTTP 20
 
 D3's Natural Earth projection displays local Natural Earth 1:110m land contours. The land asset is 138,160 bytes before compression and contains no remote map service or API key. Source, version, hash and public-domain attribution are recorded in `public/maps/ATTRIBUTION.txt`.
 
-Small red dots contrast with pale land and a dark, quiet basemap. Counts, legend, explicit reporting window and a complete accessible region table supplement color. Zoom/reset controls have 44px targets. The map supports zoom, dragging when zoomed, +/− keys, arrow-key panning and Home to reset; ordinary mobile page scrolling remains available in the initial overview.
+Small red dots contrast with pale land and a dark, quiet basemap. The world overview is fixed, with no zoom, dragging, point selection or region table. On desktop the map sits beside its short introduction and is capped at 300px high (240px on the investor page); on mobile it moves below the introduction and is capped at 220px. The accessible SVG description retains post/region totals. The legend, privacy caption and exact reporting window remain visible.
+
+The green “Live view · past 72 hours” label appears only after valid Firebase data and land geometry have loaded successfully. A refresh failure, future timestamp or snapshot older than two hours removes the live label. “Updated hourly” and the actual snapshot time clarify the refresh cadence; this is not a continuous per-event stream. Initial/server rendering makes no live claim.
 
 Design references: [Apple HIG Maps](https://developer.apple.com/design/human-interface-guidelines/maps), [Apple HIG Color](https://developer.apple.com/design/human-interface-guidelines/color), and [D3 geographic projections](https://d3js.org/d3-geo/projection). Red indicates post locations, not an error status. The display describes recorded posting locations, not nationality or residence.
 
@@ -31,4 +33,4 @@ No Firebase functions, rules, indexes or public hosting were deployed for this c
 
 ## Checks
 
-`npm test` includes public-window filtering, collisions, coordinate boundaries, omission/PII rules, strict response validation, complete 301-document pagination with a shared read time, query failures, proxy filtering and hourly request coalescing. The complete suite has 20 passing tests. The Firebase companion passes TypeScript checking against the existing backend dependencies. The production Vite build and SEO checks pass; the map was visually checked in Safari with live data. A physical mobile device and the deployed Pages/Firebase pair have not been tested.
+`npm test` includes public-window filtering, collisions, coordinate boundaries, omission/PII rules, strict response validation, complete 301-document pagination with a shared read time, query failures, proxy filtering and hourly request coalescing. Rendering checks cover the compact map without zoom/table controls, the initial neutral state and live-label eligibility for fresh, missing, failed and overdue snapshots. The complete suite has 20 passing tests. The Firebase companion passes TypeScript checking against the existing backend dependencies. The production Vite build and SEO checks pass; the compact map and live label were visually checked in Safari with actual data. A physical mobile device and the deployed Pages/Firebase pair have not been tested.

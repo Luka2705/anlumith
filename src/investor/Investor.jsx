@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ArrowUpRight, ArrowDown, ArrowRight, Check, Plus, Music2, Users, Globe2, RefreshCw } from 'lucide-react';
-import { scaleBand, scaleLinear } from 'd3-scale';
 import i18n, { detectLocale, formatNumber, locales } from './i18n.js';
 import { historicalSnapshot, HOUR, METRICS, PERIODS, snapshotState, validateSnapshot } from './metrics.js';
 import { company } from '../site.js';
 import { updateSeo } from './seo.js';
 import { screenshotImages } from './image-assets.js';
 import CommunityWorldMap from './CommunityWorldMap.jsx';
+import './investor-proof.css';
 
 const appStore = 'https://apps.apple.com/de/app/echo-music/id6749182326';
 const playStore = 'https://play.google.com/store/apps/details?id=com.anlumith.echo';
@@ -25,8 +25,8 @@ function InvestorBrief({ data, status, t, locale, n }) {
     <p className="echo-eyebrow">{t('investorBrief')}</p><h1 className="display-heading">{t('investorPageTitle')}</h1>
     <p className="investor-position">{t('investorPosition')}</p><p className="section-body">{t('investorIntro')}</p>
     <div className="hero-actions"><a className="echo-button primary" href="#contact">{t('deck')}<ArrowUpRight size={18} /></a><a className="text-link" href={`/${locale}#product`}>{t('explore')}<ArrowUpRight size={18} /></a></div>
-    <section className="brief-traction" aria-labelledby="brief-traction-title"><h2 id="brief-traction-title">{t('dashboardTitle')}</h2>{status}
-      <dl className="brief-numbers">{['totalUsers', 'newUsers', 'contributors', 'sharedSongs'].map(key => <div key={key}><dt>{t(key)}</dt><dd>{n(key === 'totalUsers' ? data.totalUsers : data.periods['3m'][key])}</dd><small>{t(key === 'totalUsers' ? data.source === 'historical' ? 'historical' : 'lastRefresh' : 'threeMonths')}</small></div>)}</dl>
+    <section className="brief-traction" aria-labelledby="brief-traction-title"><h2 id="brief-traction-title">{t('proofTitle')}</h2>{status}
+      <dl className="brief-numbers">{['newUsers', 'contributors', 'sharedSongs'].map(key => <div key={key}><dt>{t(key)}</dt><dd>{n(data.periods['3m'][key])}</dd><small>{t('proofPeriod')}</small></div>)}</dl>
       <p className="section-body">{t(data.source === 'firebase' ? 'liveContributorDef' : 'contributorDef')}</p><a className="text-link" href={`/${locale}#traction`}>{t('definitions')}<ArrowUpRight size={17} /></a>
     </section>
     <CommunityWorldMap locale={locale} t={t} embedded />
@@ -64,23 +64,6 @@ function useMetrics() {
     return () => { active.current?.abort(); active.current = null; clearInterval(timer); clearInterval(freshness); };
   }, []);
   return { data, loading, error, refresh, state: snapshotState(data, now) };
-}
-
-function Bars({ entries, label, n, t }) {
-  const width = 520, rowHeight = 56, height = entries.length * rowHeight + 30;
-  const scale = scaleLinear().domain([0, Math.max(1, ...entries.map(entry => entry.value))]).range([0, 350]);
-  const rows = scaleBand().domain(entries.map(entry => entry.key)).range([8, entries.length * rowHeight + 8]).padding(0.4);
-  return <svg className="metric-chart" viewBox={`0 0 ${width} ${height}`} role="img" aria-label={label}>
-    <title>{label}</title><desc>{entries.map(entry => `${t(entry.key)}: ${n(entry.value)}`).join('; ')}</desc>
-    {entries.map((entry, index) => <g key={entry.key}>
-      <text x="0" y={rows(entry.key) + 1} className="chart-label">{t(entry.key)}</text>
-      <rect x="0" y={rows(entry.key) + 12} width="350" height="8" rx="4" className="chart-track" />
-      <rect x="0" y={rows(entry.key) + 12} width={scale(entry.value)} height="8" rx="4" className={`chart-bar tone-${index}`} />
-      <text x="515" y={rows(entry.key) + 22} textAnchor="end" className="chart-value">{n(entry.value)}</text>
-    </g>)}
-    <text x="0" y={height - 2} className="chart-axis">0</text>
-    <text x="350" y={height - 2} textAnchor="end" className="chart-axis">{n(Math.max(...entries.map(entry => entry.value)))}</text>
-  </svg>;
 }
 
 function Definition({ metric, data, t }) {
@@ -202,31 +185,30 @@ export default function Investor({ initialLocale, initialPath } = {}) {
       </section>
 
       <section id="moment" className="traction-moment"><div className="echo-wrap"><div className="moment-heading"><p className="echo-eyebrow">{t('actual')}</p><h2>{t('moment1')}<br /><span>{t('moment2')}</span></h2><p>{t('momentIntro')}</p></div><div className="moment-total"><strong className="number-reveal">{n(data.totalUsers)}</strong><div><span>{t('totalUsers')}</span><small>{t(metrics.state === 'historical' ? 'historicalShort' : metrics.state)}</small></div></div>
-      <div className="moment-grid">{METRICS.map(key => <div key={key}><strong>{n(three[key])}</strong><span>{t(key)}</span><small>{t('threeMonths')}</small></div>)}</div><div className="moment-foot"><span>{t('built')}</span><a href="#traction">{t('seeTraction')}<ArrowDown size={16} /></a></div></div></section>
+      <div className="moment-foot"><span>{t('built')}</span><a href="#traction">{t('seeTraction')}<ArrowDown size={16} /></a></div></div></section>
 
       <section id="product" className="echo-product echo-wrap section-space"><div className="product-copy"><p className="echo-eyebrow">{t('productEyebrow')}</p><h2 className="display-heading">{t('productTitle')}</h2><p className="section-body">{t('productBody')}</p><ul className="product-features">{['productFeature1', 'productFeature2', 'mapFeature'].map((key, index) => { const Icon = icons[index]; return <li key={key}><Icon size={19} />{t(key)}</li>; })}</ul><div className="store-links"><a href={appStore}>{t('ios')}<ArrowUpRight size={16} /></a><a href={playStore}>{t('android')}<ArrowUpRight size={16} /></a></div></div><div className="product-visuals"><div className="product-phone phone-back original-screen"><Screenshot name="map-asia" alt={t('mapVisualAsia')} /></div><div className="product-phone phone-front original-screen"><Screenshot name="feed-original" alt={t('feedVisual')} /></div><span className="visual-source">{t('providedVisuals')}</span></div></section>
 
       <CommunityWorldMap locale={locale} t={t} />
       <details className="map-product-details"><summary className="echo-wrap">{t('geoAppScreenshots')}<Plus size={17} /></summary><div className="echo-wrap world-map-layout"><div className="world-map-copy"><p className="echo-eyebrow"><Globe2 size={16} />{t('mapEyebrow')}</p><h2 id="world-map-title" className="display-heading">{t('mapTitle')}</h2><p className="section-body">{t('mapBody')}</p><p className="section-body">{t('mapDetail')}</p><a className="text-link" href={appStore}>{t('mapApp')}<ArrowUpRight size={18} /></a><p className="map-image-note">{t('mapImageNote')}</p></div><div className="world-map-gallery">{[{ source: 'map-americas', caption: 'mapAmericas', alt: 'mapVisualAmericas' }, { source: 'map-asia', caption: 'mapAsia', alt: 'mapVisualAsia' }].map(image => <figure key={image.source}><a className="map-original-link" href={`/echo/${image.source}.png`} target="_blank" rel="noreferrer" aria-label={`${t('openOriginal')} — ${t(image.caption)}`}><Screenshot name={image.source} alt={t(image.alt)} /></a><figcaption><span>{t(image.caption)}</span><a href={`/echo/${image.source}.png`} target="_blank" rel="noreferrer">{t('openOriginal')}<ArrowUpRight size={13} /></a></figcaption></figure>)}</div></div></details>
 
-      <section id="traction" className="echo-dashboard section-space"><div className="echo-wrap"><div className="section-top"><div><p className="echo-eyebrow">{t('dashboardEyebrow')}</p><h2 className="display-heading">{t('dashboardTitle')}</h2><p className="section-body">{t('dashboardIntro')}</p></div><a className="text-link" href="#contact">{t('deck')}<ArrowUpRight size={18} /></a></div>
-        <div className="dashboard-toolbar">{status}<div className="period-selector" role="group" aria-label={t('periodLabel')}>{PERIODS.map(key => <button key={key} type="button" aria-pressed={period === key} onClick={() => setPeriod(key)}>{t(`periods.${key}`)}</button>)}</div></div>
-        <div className="refresh-notice" aria-live="polite">{metrics.loading ? t('refreshing') : metrics.error ? <>{t('refreshError')} <button onClick={metrics.refresh}><RefreshCw size={13} />{t('retry')}</button></> : data.source === 'historical' ? t('snapshotNote') : <>{t('lastRefresh')}: {new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Europe/Berlin' }).format(data.generatedAt)} (Europe/Berlin)</>}</div>
-        <div className="dashboard-kpis" aria-live="polite" aria-atomic="true"><div className="dashboard-total"><div className="kpi-label">{t('totalUsers')}<Definition metric="totalUsers" data={data} t={t} /></div><strong>{n(data.totalUsers)}</strong><small>{t(metrics.state === 'historical' ? 'historical' : metrics.state)}</small></div>{METRICS.map(key => <div key={key}><div className="kpi-label">{t(key)}<Definition metric={key} data={data} t={t} /></div><strong key={`${key}-${period}`}>{n(current[key])}</strong><small>{t(`periods.${period}`)}</small></div>)}</div>
-        <div className="chart-grid">{[
-          { title: 'acquisition', note: 'acquisitionNote', keys: ['newUsers'] },
-          { title: 'communityActivity', note: 'activityNote', keys: ['activeUsers', 'contributors'] },
-          { title: 'sharing', note: 'sharingNote', keys: ['sharedSongs'] },
-          { title: 'engagement', note: 'engagementNote', keys: ['contributors'] },
-        ].map((chart, index) => <figure className="chart-panel" key={chart.title}><figcaption><span className="chart-index">0{index + 1}</span><h3>{t(chart.title)}</h3><span className="chart-period">{t(`periods.${period}`)}</span></figcaption><p>{t(chart.note)}</p><Bars entries={chart.keys.map(key => ({ key, value: current[key] }))} label={`${t(chart.title)} — ${t(`periods.${period}`)}`} t={t} n={n} /><div className="chart-caption"><span className="tiny-dot" />{t('periodTotal')}</div></figure>)}</div>
-        <p className="totals-note">{t('totalsOnly')}</p>
-        {period === '24h' && data.growth24h !== null && <div className="growth-note"><strong>{t('growth', { value: `${data.growth24h > 0 ? '+' : ''}${n(data.growth24h)}` })}</strong><span>{t('growthNote')}</span></div>}
-        <details className="metric-methodology"><summary>{t('definitions')}<Plus size={17} /></summary><div>{['totalUsers', ...METRICS].map(key => <div key={key}><h4>{t(key)}</h4><p>{t({ totalUsers: 'totalDef', newUsers: 'newDef', activeUsers: 'activeDef', contributors: data.source === 'firebase' ? 'liveContributorDef' : 'contributorDef', sharedSongs: 'songDef' }[key])}</p></div>)}<p>{t('periodsDef')}</p></div></details>
+      <section id="traction" className="investor-proof section-space" aria-labelledby="proof-title"><div className="echo-wrap">
+        <div className="section-top"><div><p className="echo-eyebrow">{t('proofEyebrow')}</p><h2 id="proof-title" className="display-heading">{t('proofTitle')}</h2><p className="section-body">{t('proofIntro')}</p></div><a className="text-link" href="#contact">{t('deck')}<ArrowUpRight size={18} /></a></div>
+        <div className="proof-meta"><span>{t('proofPeriod')}</span>{status}</div>
+        <div className="proof-grid" aria-live="polite" aria-atomic="true">{[
+          { key: 'newUsers', title: 'proofAcquisitionTitle', body: 'proofAcquisitionBody' },
+          { key: 'contributors', title: 'proofParticipationTitle', body: 'proofParticipationBody' },
+          { key: 'sharedSongs', title: 'proofSharingTitle', body: 'proofSharingBody' },
+        ].map(proof => <article key={proof.key}><strong>{n(three[proof.key])}</strong><h3>{t(proof.title)}</h3><p>{t(proof.body)}</p></article>)}</div>
+        <div className="proof-refresh" aria-live="polite">{metrics.loading ? t('refreshing') : metrics.error ? <>{t('refreshError')} <button type="button" onClick={metrics.refresh}><RefreshCw size={13} />{t('retry')}</button></> : data.source === 'historical' ? t('snapshotNote') : null}</div>
+        <details className="proof-details"><summary>{t('proofDetails')}<Plus size={17} /></summary><div className="proof-details-body">
+          <div className="dashboard-toolbar"><p>{t('periodLabel')}</p><div className="period-selector" role="group" aria-label={t('periodLabel')}>{PERIODS.map(key => <button key={key} type="button" aria-pressed={period === key} onClick={() => setPeriod(key)}>{t(`periods.${key}`)}</button>)}</div></div>
+          <dl className="proof-detail-values" aria-live="polite" aria-atomic="true">{['totalUsers', ...METRICS].map(key => <div key={key}><dt>{t(key)}<Definition metric={key} data={data} t={t} /></dt><dd>{n(key === 'totalUsers' ? data.totalUsers : current[key])}</dd><small>{t(key === 'totalUsers' ? metrics.state === 'historical' ? 'historical' : 'lastRefresh' : `periods.${period}`)}</small></div>)}</dl>
+          <div className="proof-definitions">{['totalUsers', ...METRICS].map(key => <div key={key}><h4>{t(key)}</h4><p>{t({ totalUsers: 'totalDef', newUsers: 'newDef', activeUsers: 'activeDef', contributors: data.source === 'firebase' ? 'liveContributorDef' : 'contributorDef', sharedSongs: 'songDef' }[key])}</p></div>)}</div><p className="proof-period-definition">{t('periodsDef')}</p>
+        </div></details>
       </div></section>
 
-      <section className="echo-story echo-wrap section-space"><p className="echo-eyebrow">{t('storyEyebrow')}</p><h2 className="display-heading">{t('storyTitle')}</h2><div className="story-rows">{[{ key: 'newUsers', title: 'story1', body: 'story1Body' }, { key: 'contributors', title: 'story2', body: 'story2Body' }, { key: 'sharedSongs', title: 'story3', body: 'story3Body' }].map((story, index) => <article key={story.key}><span className="story-index">0{index + 1}</span><div><h3>{t(story.title)}</h3><p>{t(story.body)}</p></div><div className="story-number"><strong>{n(three[story.key])}</strong><span>{t(story.key)} · {t('threeMonths')}</span></div></article>)}</div><div className="participation"><div><h3>{t('participationTitle')}</h3><p>{t('participationBody')}</p></div><div className="participation-values">{['contributors', 'activeUsers'].map(key => <div key={key}><strong>{n(three[key])}</strong><span>{t(key)}<Definition metric={key} data={data} t={t} /></span><small>{t('threeMonths')}</small></div>)}</div></div><p className="story-source">{status}</p></section>
-
-      <section id="opportunity" className="echo-opportunity section-space"><div className="echo-wrap"><p className="echo-eyebrow">{t('opportunityEyebrow')}</p><div className="section-top"><h2 className="display-heading">{t('opportunityTitle')}</h2><a href="#contact" className="text-link">{t('founder')}<ArrowUpRight size={18} /></a></div><div className="opportunity-stages">{['stageProduct', 'stageTraction', 'stageCommunity', 'stageGrowth', 'stageNext'].map((key, index) => <div key={key}><span className="stage-dot">{index === 4 ? <ArrowRight size={15} /> : <Check size={13} />}</span><span className="stage-label">{t(`stages.${index}`)}</span><p>{t(key, { count: n(index === 1 ? data.totalUsers : index === 2 ? three.contributors : three.newUsers) })}</p></div>)}</div><p className="roadmap-note">{t('roadmapNote')}</p></div></section>
+      <section id="opportunity" className="echo-opportunity section-space"><div className="echo-wrap"><p className="echo-eyebrow">{t('opportunityEyebrow')}</p><div className="section-top"><h2 className="display-heading">{t('opportunityTitle')}</h2><a href="#contact" className="text-link">{t('founder')}<ArrowUpRight size={18} /></a></div><div className="investor-next-grid"><article><Check size={20} /><h3>{t('proofBuiltTitle')}</h3><p>{t('proofBuiltBody')}</p></article><article><ArrowRight size={20} /><h3>{t('proofNextTitle')}</h3><p>{t('proofNextBody')}</p></article></div></div></section>
 
       <section className="echo-faq echo-wrap section-space" aria-labelledby="echo-faq-title"><p className="echo-eyebrow">ECHO MUSIC</p><h2 id="echo-faq-title" className="display-heading">{t('faqTitle')}</h2><div>{t('faqs', { returnObjects: true }).map(item => <details key={item.question}><summary>{item.question}<Plus size={17} /></summary><p>{item.answer}</p></details>)}</div><a className="text-link" href={`/${locale}/investors`}>{t('investorBrief')}<ArrowUpRight size={17} /></a></section>
 
