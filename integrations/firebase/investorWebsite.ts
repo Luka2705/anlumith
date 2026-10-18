@@ -5,7 +5,7 @@
 import { createHash, timingSafeEqual } from 'node:crypto';
 import { onRequest } from 'firebase-functions/v2/https';
 import { defineSecret, defineString } from 'firebase-functions/params';
-import { getFirestore } from 'firebase-admin/firestore';
+import { getFirestore, Timestamp, FieldPath, QueryDocumentSnapshot } from 'firebase-admin/firestore';
 import * as nodemailer from 'nodemailer';
 import { getSecret } from '../../utils/secrets';
 import { analyticsRegion } from '../../config/functionRegions';
@@ -13,6 +13,8 @@ import { analyticsRegion } from '../../config/functionRegions';
 import { projectInvestorSnapshot } from './investorProjection.cjs';
 // @ts-ignore -- generated from the website's shared validator.
 import { validateInquiry } from './contact-schema.cjs';
+// @ts-ignore -- generated from the website's tested public geographic contract.
+import { aggregateSongGeography, validateGeography, GEO_MAX_POSTS } from './geography.cjs';
 
 const apiToken = defineSecret('INVESTOR_API_TOKEN');
 const recipient = defineString('INVESTOR_CONTACT_RECIPIENT');
@@ -64,4 +66,42 @@ export const investorContact = onRequest({ region: analyticsRegion, secrets: [ap
       text: `Name: ${inquiry.name}\nEmail: ${inquiry.email}\nOrganization: ${inquiry.organization}\nLanguage: ${inquiry.locale}\nPrivacy acknowledged: yes\n\n${inquiry.message}` });
     res.json({ ok: true });
   } catch { res.status(503).json({ error: 'delivery_failed' }); }
+});
+
+let geographicCache: { windowEnd: number; promise: Promise<unknown> } | undefined;
+async function loadGeography(windowEnd: number) {
+  return getFirestore().runTransaction(async transaction => {
+    const base = getFirestore().collection('songs').where('isPublic', '==', true)
+      .where('timestamp', '>=', Timestamp.fromMillis(windowEnd - 72 * 3600000))
+      .where('timestamp', '<', Timestamp.fromMillis(windowEnd))
+      .orderBy('timestamp', 'desc').orderBy(FieldPath.documentId(), 'desc')
+      .select('timestamp', 'location', 'isPublic');
+    const posts: { isPublic: unknown; timestamp: number; location: unknown }[] = [];
+    let cursor: QueryDocumentSnapshot | undefined;
+    for (;;) {
+      const page = await transaction.get(cursor ? base.startAfter(cursor).limit(300) : base.limit(300));
+      for (const doc of page.docs) {
+        const data = doc.data();
+        posts.push({ isPublic: data.isPublic, timestamp: data.timestamp instanceof Timestamp ? data.timestamp.toMillis() : NaN, location: data.location });
+      }
+      if (posts.length > GEO_MAX_POSTS) throw new Error('Geographic safety limit exceeded');
+      if (page.size < 300) break;
+      cursor = page.docs[page.size - 1];
+    }
+    return validateGeography(aggregateSongGeography(posts, windowEnd));
+  }, { readOnly: true });
+}
+
+export const investorGeography = onRequest({ region: analyticsRegion, secrets: [apiToken], maxInstances: 2, timeoutSeconds: 60, memory: '256MiB' }, async (req, res) => {
+  res.set('Cache-Control', 'no-store');
+  if (req.method !== 'GET') { res.status(405).json({ error: 'method_not_allowed' }); return; }
+  if (!authorized(req.get('Authorization'))) { res.status(401).json({ error: 'unauthorized' }); return; }
+  const windowEnd = Math.floor(Date.now() / 3600000) * 3600000;
+  try {
+    if (geographicCache?.windowEnd !== windowEnd) geographicCache = { windowEnd, promise: loadGeography(windowEnd) };
+    res.json(await geographicCache.promise);
+  } catch {
+    if (geographicCache?.windowEnd === windowEnd) geographicCache = undefined;
+    res.status(503).json({ error: 'snapshot_unavailable' });
+  }
 });

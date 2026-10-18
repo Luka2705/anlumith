@@ -14,8 +14,9 @@ await writeFile(resolve(source, 'investorWebsite.ts'), await readFile(resolve(ro
 for (const [input, name, exported] of [
   ['integrations/firebase/investorProjection.mjs', 'investorProjection.cjs', 'projectInvestorSnapshot'],
   ['src/investor/contact-schema.js', 'contact-schema.cjs', 'validateInquiry'],
+  ['src/investor/geography.js', 'geography.cjs', 'aggregateSongGeography, validateGeography, GEO_MAX_POSTS'],
 ]) {
-  const content = (await readFile(resolve(root, input), 'utf8')).replace('export function ', 'function ') + `\nmodule.exports = { ${exported} };\n`;
+  const content = (await readFile(resolve(root, input), 'utf8')).replace(/\bexport\s+(?=function\b|const\b)/g, '') + `\nmodule.exports = { ${exported} };\n`;
   await writeFile(resolve(source, name), content); await writeFile(resolve(compiled, name), content);
 }
 console.log('Staged source and runtime companions. See docs/INVESTOR.md before deploying.');

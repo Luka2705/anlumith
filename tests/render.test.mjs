@@ -35,8 +35,11 @@ test('localized investor pages, legal routes, locale preference and accessible c
       assert.ok(markup.includes(translation.formLabel), locale);
       assert.ok(markup.includes(`href="/${locale}/privacy"`), locale);
       assert.ok(markup.includes('aria-pressed="true"'), locale);
-      assert.equal((markup.match(/role="img"/g) || []).length, 4, locale);
-      assert.equal((markup.match(/<desc>/g) || []).length, 4, locale);
+      assert.equal((markup.match(/role="img"/g) || []).length, 5, locale);
+      assert.equal((markup.match(/<desc>/g) || []).length, 5, locale);
+      assert.ok(markup.includes(translation.geoNoData), locale);
+      assert.ok(markup.includes('community-map-svg'), locale);
+      assert.ok(!markup.includes('class="community-map-dot'), locale);
       assert.ok(markup.includes('type="email"') && markup.includes('autoComplete="email"'), locale);
       assert.ok(markup.includes('aria-current="true"'), locale);
       assert.ok(markup.includes(formatNumber(27815, locale)), locale);

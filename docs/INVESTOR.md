@@ -55,12 +55,12 @@ The local connection is distinct from Cloudflare Pages Functions and is not depl
 node scripts/prepare-echo-backend.mjs /tmp/echo-investor-backend
 ```
 
-This generates `src/services/investor/investorWebsite.ts` and the tested CommonJS runtime companions in both `src/services/investor/` and `lib/services/investor/` under the staging directory. Copy these into the **existing Echo functions checkout**, preserving the same directory structure. The two `.cjs` runtime files must remain in `lib/services/investor/` after each clean build because TypeScript does not copy them automatically. The generator converts the shared frontend validation and pure projection to CommonJS, avoiding inconsistent validators.
+This generates `src/services/investor/investorWebsite.ts` and the tested CommonJS runtime companions in both `src/services/investor/` and `lib/services/investor/` under the staging directory. Copy these into the **existing Echo functions checkout**, preserving the same directory structure. The three `.cjs` runtime files must remain in `lib/services/investor/` after each clean build because TypeScript does not copy them automatically. The generator converts the shared frontend validation, pure projection and geographic aggregation to CommonJS, avoiding inconsistent validators.
 
 Add to Echo's `functions/src/index.ts`:
 
 ```ts
-export { investorMetrics, investorContact } from './services/investor/investorWebsite';
+export { investorMetrics, investorContact, investorGeography } from './services/investor/investorWebsite';
 ```
 
 Configure using Firebase's normal secret/parameter workflow:
@@ -70,7 +70,7 @@ Configure using Firebase's normal secret/parameter workflow:
 - `INVESTOR_METRIC_DEFINITIONS_APPROVED`: default `false`; set `true` only after approving the documented live definitions and aggregate publication.
 - Existing `EMAIL_USER` / `EMAIL_PASS` remain accessed through Echo's `getSecret`. Confirm that the deployed service identity can access them and the sender is configured.
 
-Build the existing functions project and test in the dev project before deploying only the two investor functions. Preserve all existing Firestore rules, indexes, scheduler and admin endpoints. Both new HTTP endpoints require the server bearer token. The metrics endpoint reads the existing hourly cache only. It never triggers aggregation or exports raw documents, account IDs, profiles, locations, detail pages or emails.
+Build the existing functions project and test in the dev project before deploying only the three investor functions. Preserve all existing Firestore rules, indexes, scheduler and admin endpoints. All three HTTP endpoints require the server bearer token. The metrics endpoint reads the existing hourly cache only. It never triggers aggregation or exports raw documents, account IDs, profiles, locations, detail pages or emails. The separate geography endpoint reads public song posts and exports only counts in fixed 1° regions; see [the map contract](GLOBAL-COMMUNITY-MAP.md).
 
 The contact endpoint revalidates all fields, sends plain text through the existing mail transport, and rate limits to five attempts per hashed client-IP bucket per hour using transactional writes. Add a Firestore TTL policy for `investorInquiryLimits.expiresAt`; keep that collection denied to clients (the current default-deny should be retained). No inquiry body or raw IP is stored there. Include this rate-limit retention and actual providers in the final reviewed privacy notice. Delivery failure can have an ambiguous outcome after a network timeout; there is no claim of exactly-once email delivery.
 
@@ -81,6 +81,7 @@ Keep the existing Cloudflare Pages deployment with build `npm run build:producti
 | Binding | Value |
 | --- | --- |
 | `ECHO_METRICS_URL` | HTTPS URL of deployed `investorMetrics` |
+| `ECHO_GEOGRAPHY_URL` | HTTPS URL of deployed `investorGeography` |
 | `ECHO_CONTACT_URL` | HTTPS URL of deployed `investorContact` |
 | `ECHO_API_TOKEN` | Same server-only bearer token |
 
@@ -112,7 +113,7 @@ The displayed product images now use the three original screenshots supplied by 
 - `public/echo/map-americas.png`: world map with song-cover markers across the Americas.
 - `public/echo/map-asia.png`: world map with song-cover markers across Asia and the Pacific; also displayed in the product section.
 
-The dedicated `#world-map` section presents both complete map screenshots, preserving the map attribution and app interface. Each links to the unchanged original PNG for closer inspection. This is a screenshot showcase of the app feature, not a live website map or a source of new geographic analytics. The copy, navigation and image alternatives are translated into EN/DE/ES. No AI imagery, generated people, stock images or fabricated screenshots are used. Android URL is retained from Echo's existing frontend landing page.
+The dedicated `#world-map` section now contains an interactive world map of the last 72 hours of public Firebase song posts, with red dots for approximate 1° regions. It is also embedded on each investor page. The original app screenshots remain available in a disclosure below the home-page map, preserving their attribution and app interface. Each links to the unchanged original PNG. All map copy, controls, status messages and image alternatives are translated into EN/DE/ES. No AI imagery, generated people, stock images or fabricated screenshots are used. Android URL is retained from Echo's existing frontend landing page. See [GLOBAL-COMMUNITY-MAP.md](GLOBAL-COMMUNITY-MAP.md) for privacy, query, cache and deployment details.
 
 ## Verification and release limits
 
@@ -122,11 +123,11 @@ npm run build
 npm run build:production
 ```
 
-The eleven tests check all supplied figures; live/future/stale validation; sensitive-field filtering; canonical-cache mapping; translation completeness/placeholders; locale number formatting; input validation; request methods/origins/body limits; missing configuration; upstream failure; and confirmed versus failed email responses. Additional local-reader tests verify authenticated Firestore requests, the aggregate-only field mask, fail-closed responses, request coalescing, cache expiry and loopback/origin restrictions. SSR tests render all localized pages and check visible translations, chart descriptions, input labeling, default/saved/browser locale behavior and translated legal routes. The built browser bundle was also checked to exclude the CLI credential reader and OAuth scope.
+The twenty tests cover supplied figures; live/future/stale validation; sensitive-field filtering; canonical-cache mapping; translation completeness/placeholders; locale number formatting; input validation; request methods/origins/body limits; missing configuration; upstream failure; and confirmed versus failed email responses. Local-reader tests verify authenticated Firestore requests, field masks, fail-closed responses, request coalescing, cache expiry and loopback/origin restrictions. Geography tests verify the public-only 72-hour window, coordinate aggregation, complete pagination with a consistent read time, strict public contract and hourly cache. SSR tests render all localized pages and check visible translations, accessible chart/map descriptions, input labeling, default/saved/browser locale behavior and translated legal routes. The built browser bundle was also checked to exclude the CLI credential reader and OAuth scope.
 
-The Firebase companion was staged in `/tmp` and type-checked against the installed Echo Firebase/TypeScript dependencies, without modifying or deploying Echo. The Vite production bundle passes. `npm run build:production` is intentionally blocked by existing incomplete domain, hosting retention, email transfers and Cloudflare legal configuration in `src/site.json`. No release guard was bypassed.
+The Firebase companion was staged in `/tmp` and type-checked against the installed Echo Firebase/TypeScript dependencies, without modifying or deploying Echo. The Vite production bundle passes. `npm run build:production` is intentionally blocked by existing incomplete hosting retention, email transfers and Cloudflare legal configuration in `src/site.json`. The confirmed canonical domain is configured. No release guard was bypassed.
 
-No controllable browser was available in this session, so visual mobile/desktop, actual keyboard navigation and browser interaction QA remain unverified. The local website's API was verified against the real production hourly Firebase cache with read-only access. Emulator and real email delivery were not exercised; automated failure-path tests use synthetic fixtures and mocked transport. Browser and hosted integration checks remain necessary before release.
+The local map was checked in desktop Safari with actual Firebase data, including the English/German views and keyboard zoom/reset. Its API returned HTTP 200 with 124 located public posts across 75 approximate regions for October 15–18, 2026, 10:00 Europe/Berlin. Mobile device testing remains outstanding. The local metrics API was verified against the real production hourly Firebase cache with read-only access. Emulator and real email delivery were not exercised; automated failure-path tests use synthetic fixtures and mocked transport. Hosted integration checks remain necessary before release.
 
 ## Information still needed
 

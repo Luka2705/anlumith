@@ -1,0 +1,25 @@
+Made with Natural Earth.
+
+Asset: world-land.geojson
+Dataset: Natural Earth, Land polygons including major islands, 1:110 million.
+Authors: Natural Earth contributors; primary authors Tom Patterson and Nathaniel Vaughn Kelso.
+License: Public domain. Commercial use, modification, and redistribution are permitted;
+no attribution is required by Natural Earth.
+License statement: https://www.naturalearthdata.com/about/terms-of-use/
+Dataset description: https://www.naturalearthdata.com/downloads/110m-physical-vectors/110m-land/
+Official source repository: https://github.com/nvkelso/natural-earth-vector
+Exact source: https://raw.githubusercontent.com/nvkelso/natural-earth-vector/ca96624a56bd078437bca8184e78163e5039ad19/geojson/ne_110m_land.geojson
+Retrieved: 2026-10-18
+SHA-256: 9e0729ee253ca7d7a5c4ae9395fb1902264c5377c52e224d13dd85010e2835d9
+
+Processing: None. This file is a byte-for-byte copy of the official GeoJSON.
+Antarctica is retained. No coordinates were added or synthesized.
+
+Shape contract:
+- GeoJSON FeatureCollection containing 127 Features with Polygon geometries.
+- Coordinate system WGS 84 / EPSG:4326; positions are [longitude, latitude] in degrees.
+- Rings are closed; retain the source's clockwise exterior-ring order for d3-geo.
+- Geometry coordinates, including any interior rings, are preserved.
+- Feature properties are Natural Earth's featurecla, scalerank and min_zoom.
+- Includes original top-level name, crs and bbox members; render the features/geometry.
+- Intended for a world-scale overview, not precise street or navigation use.
