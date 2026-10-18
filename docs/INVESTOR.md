@@ -131,6 +131,14 @@ The dedicated `#world-map` section contains a compact, fixed world overview of t
 
 ## Verification and release limits
 
+### Music-industry and investment thesis
+
+The opportunity section now explains three label/artist-team use cases: human-led release discovery, catalogue rediscovery through personal memories, and future aggregate regional participation views. The investor page expands this into two proposed revenue models (artist-team tools and optional diary premium), a scoped voluntary artist pilot, and the next validation milestones: returning users, incremental partner value, and repeat payment with viable delivery costs. These are hypotheses and development priorities; no label contract, artist analytics product, premium feature, revenue or streaming uplift is claimed as established.
+
+Research context: Sony's [Engagement Platform introduction, June 16, 2025](https://www.sony.com/en/SonyInfo/technology/stories/entries/sep_introduction/) describes creator/fan relationships, audience understanding and community engagement. Its [Corporate Strategy Presentation, May 14, 2025](https://www.sony.com/en/SonyInfo/News/Press/202505/25-014E/) also discusses connecting fan communities. This supports the relevance of the problem area, not Sony's interest in echo music or any partnership. The website does not use Sony logos or imply an endorsement.
+
+The thesis for echo music is an inference from its existing diary, social posting and cross-service discovery paths: personal memories could support repeat use, and human sharing could support discovery. Current aggregate growth figures do not establish cohort retention, causal network effects, willingness to pay or a scalable business model. A partner pilot should agree on audience, duration, success criteria and a suitable comparison before measurement. Opening a streaming-service link must never be reported as a verified stream. Artist-level reporting would need separate privacy-preserving implementation; no new tracking, profiling, paid advertising or backend data publication was introduced by this content change.
+
 ```sh
 npm test
 npm run build

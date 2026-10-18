@@ -111,6 +111,9 @@ test('production renderer emits complete localized content without browser globa
     for (const [locale, strings] of Object.entries({ en, de, es })) {
       const home = render(`/${locale}`, locale);
       assert.ok(home.includes(strings.productSummary));
+      assert.ok(home.includes(strings.industryIntro) && home.includes(strings.industryStatus), `${locale}: industry opportunity distinguishes present product and future tools`);
+      for (const useCase of strings.industryCases) assert.ok(home.includes(escapeHtml(useCase.title)), `${locale}: concrete label use case`);
+      assert.ok(home.includes(`href="/${locale}/investors#opportunity"`), `${locale}: detailed investment case`);
       assert.ok(home.includes(strings.diaryTitle) && home.includes(strings.discoveryTitle) && home.includes(strings.ecosystemBody), `${locale}: diary, discovery and supported listening options`);
       assertLocalizedScreenshots(home, locale);
       assert.ok(home.split(strings.organicGrowth).length - 1 >= 3, `${locale}: organic growth is repeated in key home sections`);
@@ -122,6 +125,9 @@ test('production renderer emits complete localized content without browser globa
       assert.equal((home.match(/<h1\b/g) || []).length, 1);
       const brief = render(`/${locale}/investors`, locale);
       assert.ok(brief.includes(strings.investorPosition));
+      for (const key of ['investmentBody', 'investmentProof', 'revenueTitle', 'revenueStatus', 'pilotTitle', 'pilotMeasure', 'fundingTitle']) assert.ok(brief.includes(escapeHtml(strings[key])), `${locale}: ${key}`);
+      for (const model of [...strings.revenueModels, ...strings.fundingSteps]) assert.ok(brief.includes(escapeHtml(model.title)), `${locale}: business model and investment milestones`);
+      assert.equal((brief.match(/id="opportunity"/g) || []).length, 1, `${locale}: single industry opportunity section`);
       assert.ok(brief.includes(strings.diaryTitle), `${locale}: investor product evidence`);
       assertLocalizedScreenshots(brief, locale, ['diary-original']);
       assert.ok(brief.split(strings.organicGrowth).length - 1 >= 3, `${locale}: investor introduction, evidence and contact repeat the organic message`);

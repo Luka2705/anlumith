@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ArrowUpRight, ArrowDown, ArrowRight, ArrowLeftRight, CalendarDays, Compass, Check, Plus, Music2, Globe2, RefreshCw, Sprout } from 'lucide-react';
+import { ArrowUpRight, ArrowDown, ArrowLeftRight, CalendarDays, Compass, Check, Plus, Music2, Globe2, RefreshCw, Sprout } from 'lucide-react';
 import i18n, { detectLocale, formatNumber, locales } from './i18n.js';
 import { historicalSnapshot, HOUR, METRICS, PERIODS, snapshotState, validateSnapshot } from './metrics.js';
 import { company, musicBrand } from '../site.js';
@@ -9,6 +9,7 @@ import { getScreenshotImage } from './image-assets.js';
 import CommunityWorldMap from './CommunityWorldMap.jsx';
 import './investor-proof.css';
 import './music-diary.css';
+import './industry-opportunity.css';
 
 const appStore = 'https://apps.apple.com/de/app/echo-music/id6749182326';
 const playStore = 'https://play.google.com/store/apps/details?id=com.anlumith.echo';
@@ -40,6 +41,26 @@ function DiaryProduct({ t, locale, embedded = false }) {
   </section>;
 }
 
+function IndustryOpportunity({ t, locale, detailed = false }) {
+  const cards = key => t(key, { returnObjects: true }).map(item => <article key={item.title}><h3>{item.title}</h3><p>{item.body}</p></article>);
+  return <section id="opportunity" className={`industry-opportunity${detailed ? ' industry-opportunity--detailed' : ' section-space'}`} aria-labelledby="industry-title">
+    <div className={detailed ? undefined : 'echo-wrap'}>
+      <p className="echo-eyebrow">{t('industryEyebrow')}</p>
+      <h2 id="industry-title" className="display-heading">{t('industryTitle')}</h2>
+      <p className="section-body industry-intro">{t('industryIntro')}</p>
+      <div className="industry-cases">{cards('industryCases')}</div>
+      <p className="industry-status">{t('industryStatus')}</p>
+      {detailed ? <>
+        <div className="investment-thesis"><h2>{t('investmentTitle')}</h2><p>{t('investmentBody')}</p><p>{t('investmentProof')}</p></div>
+        <div className="industry-revenue"><h2>{t('revenueTitle')}</h2><div className="industry-models">{cards('revenueModels')}</div><p className="industry-status">{t('revenueStatus')}</p></div>
+        <div className="industry-pilot"><h2>{t('pilotTitle')}</h2><p>{t('pilotBody')}</p><p className="industry-status">{t('pilotMeasure')}</p></div>
+        <div className="industry-funding"><h2>{t('fundingTitle')}</h2><ol>{t('fundingSteps', { returnObjects: true }).map(item => <li key={item.title}><h3>{item.title}</h3><p>{item.body}</p></li>)}</ol></div>
+        <a className="text-link" href={mail(t)}>{t('industryContact')}<ArrowUpRight size={18} /></a>
+      </> : <a className="text-link" href={`/${locale}/investors#opportunity`}>{t('industryMore')}<ArrowUpRight size={18} /></a>}
+    </div>
+  </section>;
+}
+
 function InvestorBrief({ data, status, t, locale, n }) {
   return <main id="echo-content" className="echo-wrap investor-brief section-space">
     <p className="echo-eyebrow">{t('investorBrief')}</p><h1 className="display-heading">{t('investorPageTitle')}</h1>
@@ -50,9 +71,10 @@ function InvestorBrief({ data, status, t, locale, n }) {
       <dl className="brief-numbers">{['newUsers', 'contributors', 'sharedSongs'].map(key => <div key={key}><dt>{t(key)}</dt><dd>{n(data.periods['3m'][key])}</dd><small>{t('proofPeriod')}</small></div>)}</dl>
       <p className="section-body">{t(data.source === 'firebase' ? 'liveContributorDef' : 'contributorDef')}</p><details className="organic-source"><summary>{t('definitions')}</summary><p>{t('organicSource')}</p></details><a className="text-link" href={`/${locale}#traction`}>{t('definitions')}<ArrowUpRight size={17} /></a>
     </section>
+    <IndustryOpportunity t={t} locale={locale} detailed />
     <DiaryProduct t={t} locale={locale} embedded />
     <CommunityWorldMap locale={locale} t={t} embedded />
-    <section className="brief-story"><div><h2>{t('investorOpportunity')}</h2><p>{t('investorOpportunityBody')}</p><a className="text-link" href={`/${locale}#world-map`}>{t('mapNav')}<ArrowUpRight size={17} /></a></div><div><h2>{t('founderTitle')}</h2><p>{t('founderBody')}</p><a className="text-link" href={mail(t)}>{t('founder')}<ArrowUpRight size={17} /></a></div></section>
+    <section className="brief-story"><div><h2>{t('founderTitle')}</h2><p>{t('founderBody')}</p><a className="text-link" href={mail(t)}>{t('founder')}<ArrowUpRight size={17} /></a></div></section>
     <section id="contact" className="brief-contact"><div><p className="echo-eyebrow">{t('contactEyebrow')}</p><h2>{t('investorDiligence')}</h2><OrganicGrowth t={t} /><p className="section-body">{t('organicContact')}</p><p className="section-body">{t('investorDiligenceBody')}</p><a className="text-link" href={mail(t)}>{company.email}<ArrowUpRight size={17} /></a></div><ContactForm t={t} locale={locale} /></section>
   </main>;
 }
@@ -230,7 +252,7 @@ export default function Investor({ initialLocale, initialPath } = {}) {
         </div></details>
       </div></section>
 
-      <section id="opportunity" className="echo-opportunity section-space"><div className="echo-wrap"><p className="echo-eyebrow">{t('opportunityEyebrow')}</p><div className="section-top"><h2 className="display-heading">{t('opportunityTitle')}</h2><a href="#contact" className="text-link">{t('founder')}<ArrowUpRight size={18} /></a></div><div className="investor-next-grid"><article><Check size={20} /><h3>{t('proofBuiltTitle')}</h3><p>{t('proofBuiltBody')}</p></article><article><ArrowRight size={20} /><h3>{t('proofNextTitle')}</h3><p>{t('proofNextBody')}</p></article></div></div></section>
+      <IndustryOpportunity t={t} locale={locale} />
 
       <section className="echo-faq echo-wrap section-space" aria-labelledby="echo-faq-title"><p className="echo-eyebrow">{musicBrand.name}</p><h2 id="echo-faq-title" className="display-heading">{t('faqTitle')}</h2><div>{t('faqs', { returnObjects: true }).map(item => <details key={item.question}><summary>{item.question}<Plus size={17} /></summary><p>{item.answer}</p></details>)}</div><a className="text-link" href={`/${locale}/investors`}>{t('investorBrief')}<ArrowUpRight size={17} /></a></section>
 
