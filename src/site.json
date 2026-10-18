@@ -7,7 +7,7 @@
     "postalCode": "70771",
     "city": "Leinfelden-Echterdingen",
     "country": "Deutschland",
-    "email": "luka@anlumith.com",
+    "email": "info@anlumith.com",
     "phone": "+49 178 2380948",
     "representative": "",
     "register": "",
@@ -28,7 +28,7 @@
   },
   "products": [
     {
-      "name": "Echo Music",
+      "name": "echo music",
       "description": "Jeden Tag einen Song teilen. Mit Freunden neue Musik entdecken.",
       "url": "https://echo-ee3bf.web.app",
       "theme": "echo",

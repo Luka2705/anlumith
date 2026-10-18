@@ -20,7 +20,7 @@ export async function prerender(directory) {
       const strings = { en, de, es }[locale];
       const route = pathname === '/404.html' ? '/en/not-found' : pathname;
       const content = render(route, locale);
-      const head = corporate ? `<title>${escapeHtml(companyPages[pathname])}</title><meta name="description" content="ANLUMITH entwickelt digitale Produkte. Entdecke Echo Music und MyBasar."><meta name="robots" content="${isDraft ? 'noindex, follow' : 'index, follow'}">${site.domain ? `<link rel="canonical" href="${escapeHtml(new URL(pathname, site.domain).href)}">` : ''}` : seoTags({ pathname: route, locale });
+      const head = corporate ? `<title>${escapeHtml(companyPages[pathname])}</title><meta name="description" content="ANLUMITH entwickelt digitale Produkte. Entdecke echo music und MyBasar."><meta name="robots" content="${isDraft ? 'noindex, follow' : 'index, follow'}">${site.domain ? `<link rel="canonical" href="${escapeHtml(new URL(pathname, site.domain).href)}">` : ''}` : seoTags({ pathname: route, locale });
       let html = template.replace(/<title>[\s\S]*?<\/title>/g, '')
         .replace(/<meta name="(?:description|robots|apple-itunes-app)"[^>]*>/g, '')
         .replace(/<html lang="[^"]*">/, `<html lang="${locale}">`)

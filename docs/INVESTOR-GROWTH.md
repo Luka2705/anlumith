@@ -1,14 +1,14 @@
-# Echo Music: 30 Tage für Auffindbarkeit und Investorengespräche
+# echo music: 30 Tage für Auffindbarkeit und Investorengespräche
 
 Stand: **17. Oktober 2026**, Europe/Berlin. Arbeitszeitraum: **17. Oktober bis 15. November 2026**. Bestätigte Hauptdomain: **https://anlumith.com**. Der Betreiber wünscht **keine bezahlte Werbung**. Dieses Dokument enthält einen organischen Arbeitsplan und verwendbare Textentwürfe. Es wurden keine Kontakte angeschrieben, Bewerbungen eingereicht oder Werbekampagnen aktiviert.
 
-Das Ziel ist, Echo Music für passende Musik- und Consumer-Tech-Investoren verständlich, auffindbar und prüfbar zu machen. Eine bestimmte Google-Position, ein Apple-Feature oder eine Finanzierung lässt sich daraus nicht versprechen. Google nennt ausdrücklich keine automatische Methode für Platz 1; Suchänderungen können Wochen oder Monate benötigen. [Google: SEO Starter Guide](https://developers.google.com/search/docs/fundamentals/seo-starter-guide)
+Das Ziel ist, echo music für passende Musik- und Consumer-Tech-Investoren verständlich, auffindbar und prüfbar zu machen. Eine bestimmte Google-Position, ein Apple-Feature oder eine Finanzierung lässt sich daraus nicht versprechen. Google nennt ausdrücklich keine automatische Methode für Platz 1; Suchänderungen können Wochen oder Monate benötigen. [Google: SEO Starter Guide](https://developers.google.com/search/docs/fundamentals/seo-starter-guide)
 
 ## Die Geschichte in einem Satz
 
-**DE:** Echo Music ist eine soziale Musik-App: Menschen teilen täglich einen Song, entdecken Musik über Freunde und erkunden geteilte Songs auf einer Weltkarte.
+**DE:** echo music ist eine soziale Musik-App: Menschen teilen täglich einen Song, entdecken Musik über Freunde und erkunden geteilte Songs auf einer Weltkarte.
 
-**EN:** Echo Music is a social music app where people share a daily song, discover music through friends, and explore shared songs on a world map.
+**EN:** echo music is a social music app where people share a daily song, discover music through friends, and explore shared songs on a world map.
 
 Die Weltkarte ist ein konkreter Einstieg in die Produktgeschichte. Echte Screenshots zeigen das Feature; eine kurze Aufnahme soll anschließend den Weg vom Feed zur Karte und zu einem Song zeigen. Die Positionsmarker in Screenshots belegen weder aktuelle Länderreichweite noch Nutzerdichte.
 
@@ -24,13 +24,13 @@ Die folgenden Begriffe sind Arbeitshypothesen, keine belegten Suchvolumina. EN- 
 
 | Suchabsicht | Beispielbegriffe | Inhalt und Handlungsziel |
 | --- | --- | --- |
-| Marke und eindeutiges Produkt | `Echo Music app`, `Echo Music Weltkarte`, `Echo Music ANLUMITH` | Einheitlicher Name, Betreiber, Originalscreenshots und offizieller Store-Link; Echo von anderen gleichnamigen Angeboten unterscheidbar machen. |
+| Marke und eindeutiges Produkt | `echo music app`, `echo music Weltkarte`, `echo music ANLUMITH` | Einheitlicher Name, Betreiber, Originalscreenshots und offizieller Store-Link; echo music von anderen gleichnamigen Angeboten unterscheidbar machen. |
 | Musik über Menschen entdecken | `social music discovery app`, `Musik mit Freunden entdecken`, `daily song sharing app` | Den Ablauf „Song teilen → Freunde → Entdeckung“ anhand echter Funktionen erklären; App öffnen. |
 | Die Karte als Besonderheit | `music discovery world map`, `Songs auf Weltkarte entdecken`, `music map app` | Weltkarte, Songmarker und Bedienung erklären; Screenshots mit sichtbarer Quellenzuordnung und sinnvollem Alternativtext. |
 | Musiktagebuch | `daily music diary app`, `Musiktagebuch App`, `jeden Tag einen Song teilen` | Tägliches Teilen erklären; keine Hörhistorie oder Funktionen zusagen, die nicht belegt sind. |
-| Investoren prüfen Echo | `Echo Music investors`, `Echo Music traction`, `Echo Music Gründer` | Produkt, definierte und datierte Kennzahlen, Gründerkontakt, Deck-Anfrage; direkte Investorengespräche erleichtern. |
+| Investoren prüfen echo music | `echo music investors`, `echo music traction`, `echo music Gründer` | Produkt, definierte und datierte Kennzahlen, Gründerkontakt, Deck-Anfrage; direkte Investorengespräche erleichtern. |
 
-Generische Suchen wie `music investors` führen oft zu Listen von Geldgebern. Diese Suchabsicht passt nur begrenzt zu Echo als Investmentziel. Vorrang haben die Marke, die Produktkategorie und direkte Kontakte. Begriffe gehören in klare Titel, Überschriften und hilfreiche Texte; Keyword-Wiederholungen liefern keinen eigenen Nutzen. [Google: SEO Starter Guide](https://developers.google.com/search/docs/fundamentals/seo-starter-guide)
+Generische Suchen wie `music investors` führen oft zu Listen von Geldgebern. Diese Suchabsicht passt nur begrenzt zu echo music als Investmentziel. Vorrang haben die Marke, die Produktkategorie und direkte Kontakte. Begriffe gehören in klare Titel, Überschriften und hilfreiche Texte; Keyword-Wiederholungen liefern keinen eigenen Nutzen. [Google: SEO Starter Guide](https://developers.google.com/search/docs/fundamentals/seo-starter-guide)
 
 ## Der konkrete 30-Tage-Plan
 
@@ -82,15 +82,15 @@ Der Betreiber hat bezahlte Werbung ausgeschlossen. Google Ads, Apple Ads, gespon
 
 ### Investoreneinstieg DE
 
-**Betreff:** Echo Music: Musik entdecken über Menschen und eine Weltkarte
+**Betreff:** echo music: Musik entdecken über Menschen und eine Weltkarte
 
-> Echo Music verbindet einen täglich geteilten Song mit Freunden und einer Weltkarte für Musikentdeckung. Die App ist veröffentlicht; die Investorenseite zeigt das Produkt und erklärt die verfügbaren Kennzahlen mit Datenstand. Für Ihre Ausrichtung auf [konkreter, belegter Portfolio-/Thesenbezug] könnte besonders [passendes Produktdetail] relevant sein. Ich würde Ihnen gern eine kurze Demo und die Unterlagen zeigen. Ist das Thema grundsätzlich Teil Ihres Investmentfokus?
+> echo music verbindet einen täglich geteilten Song mit Freunden und einer Weltkarte für Musikentdeckung. Die App ist veröffentlicht; die Investorenseite zeigt das Produkt und erklärt die verfügbaren Kennzahlen mit Datenstand. Für Ihre Ausrichtung auf [konkreter, belegter Portfolio-/Thesenbezug] könnte besonders [passendes Produktdetail] relevant sein. Ich würde Ihnen gern eine kurze Demo und die Unterlagen zeigen. Ist das Thema grundsätzlich Teil Ihres Investmentfokus?
 
 ### Investoreneinstieg EN
 
-**Subject:** Echo Music: social music discovery through people and places
+**Subject:** echo music: social music discovery through people and places
 
-> Echo Music connects a daily shared song with friends and a world map for music discovery. The app is launched, and our investor page shows the product with dated, defined metrics. Given your focus on [specific, verified thesis or portfolio connection], [relevant product detail] may be worth exploring. I would like to share a short demo and the investor materials. Does this fit your current investment focus?
+> echo music connects a daily shared song with friends and a world map for music discovery. The app is launched, and our investor page shows the product with dated, defined metrics. Given your focus on [specific, verified thesis or portfolio connection], [relevant product detail] may be worth exploring. I would like to share a short demo and the investor materials. Does this fit your current investment focus?
 
 Die eckigen Klammern vor Verwendung individuell ersetzen. Empfänger nicht als Partner darstellen. Den Gründer mit tatsächlichem Namen und verifiziertem Kontakt unterzeichnen. Eine geplante Finanzierungsrunde erst nennen, wenn Umfang, Phase und Mittelverwendung feststehen.
 
@@ -100,16 +100,16 @@ Diese kurzen Überschriften und Beschreibungen können in organischen Gründerbe
 
 | Ziel / Sprache | Überschriften | Beschreibung |
 | --- | --- | --- |
-| Investoren · DE | Echo Music für Investoren · Musik durch Menschen finden · Produkt und Zahlen ansehen | Entdecke Echo Music: tägliche Songs, Freunde und Weltkarte. Fordere das Deck an. |
-| Investors · EN | Echo Music for Investors · Social Music Discovery · Explore the Product | Echo Music connects daily song sharing, friends and a world map. Request the deck. |
-| App-Nutzer · DE | Dein Tag. Dein Song. · Musik auf der Weltkarte | Entdecke Songs, die Menschen teilen. Erkunde die Weltkarte in Echo Music. |
-| App users · EN | Your day. Your song. · Music on the World Map | Discover songs shared by people. Explore the world map in Echo Music. |
+| Investoren · DE | echo music für Investoren · Musik durch Menschen finden · Produkt und Zahlen ansehen | Entdecke echo music: tägliche Songs, Freunde und Weltkarte. Fordere das Deck an. |
+| Investors · EN | echo music for Investors · Social Music Discovery · Explore the Product | echo music connects daily song sharing, friends and a world map. Request the deck. |
+| App-Nutzer · DE | Dein Tag. Dein Song. · Musik auf der Weltkarte | Entdecke Songs, die Menschen teilen. Erkunde die Weltkarte in echo music. |
+| App users · EN | Your day. Your song. · Music on the World Map | Discover songs shared by people. Explore the world map in echo music. |
 
 ### Kurzer Gründerbeitrag DE / EN
 
-**DE:** Musik hat einen Ort. Auf der Weltkarte von Echo Music zeigen Albumcover, wo Songs geteilt wurden. Zusammen mit dem täglichen Song und dem Freunde-Feed entsteht eine andere Art, Musik zu entdecken. Hier ist die echte Produktdemo. Wer zu Social Music Discovery arbeitet, findet Produkt und definierte Kennzahlen auf unserer Investorenseite.
+**DE:** Musik hat einen Ort. Auf der Weltkarte von echo music zeigen Albumcover, wo Songs geteilt wurden. Zusammen mit dem täglichen Song und dem Freunde-Feed entsteht eine andere Art, Musik zu entdecken. Hier ist die echte Produktdemo. Wer zu Social Music Discovery arbeitet, findet Produkt und definierte Kennzahlen auf unserer Investorenseite.
 
-**EN:** Music has a place. On Echo Music’s world map, album covers mark where songs were shared. Alongside a daily song and the friends feed, the map offers another way to discover music. Here is the actual product demo. If you work on social music discovery, our investor page explains the product and the available metrics.
+**EN:** Music has a place. On echo music’s world map, album covers mark where songs were shared. Alongside a daily song and the friends feed, the map offers another way to discover music. Here is the actual product demo. If you work on social music discovery, our investor page explains the product and the available metrics.
 
 ## Messung ohne Ergebnisversprechen
 

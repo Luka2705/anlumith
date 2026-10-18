@@ -22,7 +22,7 @@ export default function App({ pathname = window.location.pathname }) {
   useEffect(() => {
     document.documentElement.lang = 'de';
     document.querySelector('meta[name="theme-color"]').content = '#ffffff';
-    document.querySelector('meta[name="description"]').content = 'ANLUMITH entwickelt digitale Produkte. Entdecke Echo Music und MyBasar.';
+    document.querySelector('meta[name="description"]').content = 'ANLUMITH entwickelt digitale Produkte. Entdecke echo music und MyBasar.';
     document.title = route === '/' ? 'ANLUMITH – Software. Einfach gedacht.' : `${selected?.meta || selected?.title || 'Seite nicht gefunden'} – ANLUMITH`;
     let robots = document.querySelector('meta[name="robots"]');
     if (!robots) { robots = document.createElement('meta'); robots.name = 'robots'; document.head.append(robots); }
@@ -44,6 +44,6 @@ export default function App({ pathname = window.location.pathname }) {
     {route === '/' ? <Home /> : selected
       ? <Page title={selected.title} intro={selected.intro} legal={selected.legal}><selected.Content /></Page>
       : <Page title="Hier ist noch nichts." intro="Die gesuchte Seite existiert nicht oder wurde verschoben."><a href="/company/">Zur Startseite →</a></Page>}
-    <footer className="site-footer"><div className="wrap footer-inner"><p>© {new Date().getFullYear()} ANLUMITH</p><nav className="footer-nav" aria-label="Rechtliche Informationen"><a href="/kontakt/">Kontakt</a><a href="/impressum/">Impressum</a><a href="/datenschutz/">Datenschutz</a><a href="/cookies/">Cookies</a></nav></div></footer>
+    <footer className="site-footer"><div className="wrap footer-inner"><p>© {new Date().getFullYear()} ANLUMITH</p><nav className="footer-nav" aria-label="Rechtliche Informationen"><a href={`mailto:${site.company.email}`}>Kontakt</a><a href="/impressum/">Impressum</a><a href="/datenschutz/">Datenschutz</a><a href="/cookies/">Cookies</a></nav></div></footer>
   </>;
 }

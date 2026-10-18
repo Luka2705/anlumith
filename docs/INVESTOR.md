@@ -1,16 +1,16 @@
-# Echo Music investor website
+# echo music investor website
 
 ## Scope and routes
 
-The existing React/Vite app is retained. Echo's investor presentation is at `/en`, `/de`, and `/es`. `/` resolves to a saved language, then a supported browser language, otherwise English. Language switching preserves the current page and section; browser back/forward is handled. Each locale has `/privacy`, `/imprint`, and `/cookies`. Vite prerenders full translated HTML for sixteen Echo routes (including the root and dedicated investor pages), plus the corporate pages and a static 404. It emits translated titles, descriptions and `lang` attributes, as well as configured-domain canonical/hreflang and social metadata. React updates metadata and configured-domain canonical/hreflang links. Unknown routes render a localized not-found screen.
+The existing React/Vite app is retained. echo music's investor presentation is at `/en`, `/de`, and `/es`. `/` resolves to a saved language, then a supported browser language, otherwise English. Language switching preserves the current page and section; browser back/forward is handled. Each locale has `/privacy`, `/imprint`, and `/cookies`. Vite prerenders full translated HTML for sixteen echo music routes (including the root and dedicated investor pages), plus the corporate pages and a static 404. It emits translated titles, descriptions and `lang` attributes, as well as configured-domain canonical/hreflang and social metadata. React updates metadata and configured-domain canonical/hreflang links. Unknown routes render a localized not-found screen.
 
-The original company homepage is preserved at `/company/`. Existing `/kontakt/`, `/impressum/`, `/datenschutz/`, and `/cookies/` routes remain available. Nothing in the adjacent Echo app/backend has been modified.
+The original company homepage is preserved at `/company/`. Existing `/kontakt/`, `/impressum/`, `/datenschutz/`, and `/cookies/` routes remain available. Nothing in the adjacent echo music app/backend has been modified.
 
 ## Data currently displayed
 
 **The local website now reads the existing production Firebase hourly cache.** `server/investor.config.json` explicitly selects `echo-ee3bf`. The server-only reader fetches `internalAnalytics/liveKpis` with a Firestore field mask, reuses the tested canonical projection, and validates the public aggregate contract before sending it to the browser. It authenticates using the existing installed Firebase CLI login, without copying tokens to project files or the browser.
 
-Verified through the running website on October 17, 2026: `/api/metrics` returned HTTP 200, `source: firebase`, `generatedAt: 1792238400000` (14:00 Europe/Berlin), total accounts 27,815, and the exact period counts listed below. This is a real authenticated Firestore read, not a fixture. The browser's existing fetch hook replaces all figures with that response and labels the timestamp. No Firebase deployments, database writes, security-rule changes or changes to the adjacent Echo checkout were needed for this local connection.
+Verified through the running website on October 17, 2026: `/api/metrics` returned HTTP 200, `source: firebase`, `generatedAt: 1792238400000` (14:00 Europe/Berlin), total accounts 27,815, and the exact period counts listed below. This is a real authenticated Firestore read, not a fixture. The browser's existing fetch hook replaces all figures with that response and labels the timestamp. No Firebase deployments, database writes, security-rule changes or changes to the adjacent echo music checkout were needed for this local connection.
 
 Before the first fetch, or if no live fetch succeeds, the UI uses the owner-supplied historical snapshot in `src/investor/metrics.js`. Its capture timestamp was not supplied; the UI says so. The application never assigns today's date to this fallback. A hosted public connection remains separate and requires the deployment setup below.
 
@@ -49,7 +49,7 @@ No deployment has been performed. `npm run dev` and `vite preview` now include a
 
 Local prerequisites: install the Firebase CLI through its official distribution, sign in using `firebase login`, and run the development server with network access. The active CLI account needs access to the configured Firestore project. `server/investor.config.json` makes the production project selection explicit; it does not contain secrets. If `ECHO_METRICS_URL` and `ECHO_API_TOKEN` are configured as server environment variables (or in an ignored `.env.local`), the local middleware uses the hosted adapter instead. Set `localMetricsSource` to a value other than `firebase-cli` to disable direct local reads.
 
-The local connection is distinct from Cloudflare Pages Functions and is not deployed by the Vite static build. Online form delivery remains unconfigured locally; the email CTA opens a deck request to the founder using the existing public company email. Form success is shown only after a backend confirms delivery; no deck is made public.
+The local connection is distinct from Cloudflare Pages Functions and is not deployed by the Vite static build. Online form delivery remains unconfigured locally; all email CTAs open a request to info@anlumith.com. Form success is shown only after a backend confirms delivery; no deck is made public.
 
 ### Stage the Firebase companion
 
@@ -57,9 +57,9 @@ The local connection is distinct from Cloudflare Pages Functions and is not depl
 node scripts/prepare-echo-backend.mjs /tmp/echo-investor-backend
 ```
 
-This generates `src/services/investor/investorWebsite.ts` and the tested CommonJS runtime companions in both `src/services/investor/` and `lib/services/investor/` under the staging directory. Copy these into the **existing Echo functions checkout**, preserving the same directory structure. The three `.cjs` runtime files must remain in `lib/services/investor/` after each clean build because TypeScript does not copy them automatically. The generator converts the shared frontend validation, pure projection and geographic aggregation to CommonJS, avoiding inconsistent validators.
+This generates `src/services/investor/investorWebsite.ts` and the tested CommonJS runtime companions in both `src/services/investor/` and `lib/services/investor/` under the staging directory. Copy these into the **existing echo music functions checkout**, preserving the same directory structure. The three `.cjs` runtime files must remain in `lib/services/investor/` after each clean build because TypeScript does not copy them automatically. The generator converts the shared frontend validation, pure projection and geographic aggregation to CommonJS, avoiding inconsistent validators.
 
-Add to Echo's `functions/src/index.ts`:
+Add to echo music's `functions/src/index.ts`:
 
 ```ts
 export { investorMetrics, investorContact, investorGeography } from './services/investor/investorWebsite';
@@ -68,9 +68,9 @@ export { investorMetrics, investorContact, investorGeography } from './services/
 Configure using Firebase's normal secret/parameter workflow:
 
 - `INVESTOR_API_TOKEN`: a high-entropy server-only token (at least 32 characters).
-- `INVESTOR_CONTACT_RECIPIENT`: verified founder destination. Never accept it from a browser request.
+- Contact recipient is fixed to the owner-designated `info@anlumith.com` in the Firebase companion. No runtime parameter or browser field can redirect an inquiry to a different address.
 - `INVESTOR_METRIC_DEFINITIONS_APPROVED`: default `false`; set `true` only after approving the documented live definitions and aggregate publication.
-- Existing `EMAIL_USER` / `EMAIL_PASS` remain accessed through Echo's `getSecret`. Confirm that the deployed service identity can access them and the sender is configured.
+- Existing `EMAIL_USER` / `EMAIL_PASS` remain accessed through echo music's `getSecret`. Confirm that the deployed service identity can access them and the sender is configured.
 
 Build the existing functions project and test in the dev project before deploying only the three investor functions. Preserve all existing Firestore rules, indexes, scheduler and admin endpoints. All three HTTP endpoints require the server bearer token. The metrics endpoint reads the existing hourly cache only. It never triggers aggregation or exports raw documents, account IDs, profiles, locations, detail pages or emails. The separate geography endpoint reads public song posts and exports only counts in fixed 1° regions; see [the map contract](GLOBAL-COMMUNITY-MAP.md).
 
@@ -103,7 +103,7 @@ Features include skip navigation, semantic sections, headings, labeled inputs, a
 
 Original logo: existing `public/echo-icon.png`.
 
-Official [Echo App Store listing](https://apps.apple.com/de/app/echo-music/id6749182326); screenshots fetched via Apple's public lookup API. Local files:
+Official [echo music App Store listing](https://apps.apple.com/de/app/echo-music/id6749182326); screenshots fetched via Apple's public lookup API. Local files:
 
 - `public/echo/app-discovery.jpg`: official launch screen.
 - `public/echo/app-community.jpg`: official sharing screen.
@@ -115,7 +115,7 @@ The displayed product images now use the three original screenshots supplied by 
 - `public/echo/map-americas.png`: world map with song-cover markers across the Americas.
 - `public/echo/map-asia.png`: world map with song-cover markers across Asia and the Pacific; also displayed in the product section.
 
-The dedicated `#world-map` section contains a compact, fixed world overview of the last 72 hours of public Firebase song posts, with red dots for approximate 1° regions. Zoom and the region table have been removed. A verified fresh snapshot displays “Live view · past 72 hours”, with the hourly cadence and actual snapshot time alongside it; errors/overdue data remove the live label. The map is also embedded on each investor page. The original app screenshots remain available in a disclosure below the home-page map, preserving their attribution and app interface. Each links to the unchanged original PNG. All map copy, status messages and image alternatives are translated into EN/DE/ES. No AI imagery, generated people, stock images or fabricated screenshots are used. Android URL is retained from Echo's existing frontend landing page. See [GLOBAL-COMMUNITY-MAP.md](GLOBAL-COMMUNITY-MAP.md) for privacy, query, cache and deployment details.
+The dedicated `#world-map` section contains a compact, fixed world overview of the last 72 hours of public Firebase song posts, with red dots for approximate 1° regions. Zoom and the region table have been removed. A verified fresh snapshot displays “Live view · past 72 hours”, with the hourly cadence and actual snapshot time alongside it; errors/overdue data remove the live label. The map is also embedded on each investor page. The original app screenshots remain available in a disclosure below the home-page map, preserving their attribution and app interface. Each links to the unchanged original PNG. All map copy, status messages and image alternatives are translated into EN/DE/ES. No AI imagery, generated people, stock images or fabricated screenshots are used. Android URL is retained from echo music's existing frontend landing page. See [GLOBAL-COMMUNITY-MAP.md](GLOBAL-COMMUNITY-MAP.md) for privacy, query, cache and deployment details.
 
 ## Verification and release limits
 
@@ -127,7 +127,7 @@ npm run build:production
 
 The twenty tests cover supplied figures; live/future/stale validation; sensitive-field filtering; canonical-cache mapping; translation completeness/placeholders; locale number formatting; input validation; request methods/origins/body limits; missing configuration; upstream failure; and confirmed versus failed email responses. Local-reader tests verify authenticated Firestore requests, field masks, fail-closed responses, request coalescing, cache expiry and loopback/origin restrictions. Geography tests verify the public-only 72-hour window, coordinate aggregation, complete pagination with a consistent read time, strict public contract and hourly cache. SSR tests render all localized pages and check visible translations, accessible map descriptions and investor summaries, input labeling, default/saved/browser locale behavior and translated legal routes. The built browser bundle was also checked to exclude the CLI credential reader and OAuth scope.
 
-The Firebase companion was staged in `/tmp` and type-checked against the installed Echo Firebase/TypeScript dependencies, without modifying or deploying Echo. The Vite production bundle passes. `npm run build:production` is intentionally blocked by existing incomplete hosting retention, email transfers and Cloudflare legal configuration in `src/site.json`. The confirmed canonical domain is configured. No release guard was bypassed.
+The Firebase companion was staged in `/tmp` and type-checked against the installed echo music Firebase/TypeScript dependencies, without modifying or deploying echo music. The Vite production bundle passes. `npm run build:production` is intentionally blocked by existing incomplete hosting retention, email transfers and Cloudflare legal configuration in `src/site.json`. The confirmed canonical domain is configured. No release guard was bypassed.
 
 The revised compact map, fresh-data live label and combined three-figure investor section were checked in desktop Safari with actual Firebase data. The earlier API verification returned HTTP 200 with 124 located public posts across 75 approximate regions for October 15–18, 2026, 10:00 Europe/Berlin; the UI now loads subsequent hourly snapshots. Mobile device testing remains outstanding. The local metrics API was verified against the real production hourly Firebase cache with read-only access. Emulator and real email delivery were not exercised; automated failure-path tests use synthetic fixtures and mocked transport. Hosted integration checks remain necessary before release.
 
@@ -136,7 +136,7 @@ The revised compact map, fresh-data live label and combined three-figure investo
 1. Runtime endpoint URLs and secret bindings, plus deployment into the existing Firebase and Pages environments. The owner-confirmed canonical domain is https://anlumith.com.
 2. Owner approval of the broader live contributor definition and public aggregate exposure.
 3. The supplied snapshot's actual capture time (if known).
-4. Verified founder mail destination and a successful authorized end-to-end form delivery.
+4. A successful authorized end-to-end form delivery to info@anlumith.com.
 5. Provider/transfer/retention settings and reviewed legal notices for the actual deployed setup on anlumith.com.
 6. An approved, semantically explicit public historical-series contract if trend charts are added.
 

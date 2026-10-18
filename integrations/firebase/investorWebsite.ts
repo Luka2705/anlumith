@@ -17,7 +17,8 @@ import { validateInquiry } from './contact-schema.cjs';
 import { aggregateSongGeography, validateGeography, GEO_MAX_POSTS } from './geography.cjs';
 
 const apiToken = defineSecret('INVESTOR_API_TOKEN');
-const recipient = defineString('INVESTOR_CONTACT_RECIPIENT');
+// Owner-designated destination for every website inquiry; never read from a request.
+const recipient = 'info@anlumith.com';
 const approved = defineString('INVESTOR_METRIC_DEFINITIONS_APPROVED', { default: 'false' });
 function authorized(header?: string) {
   const expected = apiToken.value();
@@ -46,7 +47,6 @@ export const investorContact = onRequest({ region: analyticsRegion, secrets: [ap
   if (JSON.stringify(req.body ?? {}).length > 16000) { res.status(413).json({ error: 'too_large' }); return; }
   let inquiry: { name: string; email: string; organization: string; message: string; locale: string };
   try { inquiry = validateInquiry(req.body); } catch { res.status(400).json({ error: 'invalid_inquiry' }); return; }
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipient.value())) { res.status(503).json({ error: 'recipient_not_configured' }); return; }
   try {
     // Salted one-hour rate bucket. Store no plain IP or investor message in Firestore.
     const hour = Math.floor(Date.now() / 3600000);
@@ -61,8 +61,8 @@ export const investorContact = onRequest({ region: analyticsRegion, secrets: [ap
     if (!allowed) { res.status(429).json({ error: 'rate_limited' }); return; }
     const [user, pass] = await Promise.all([getSecret('EMAIL_USER'), getSecret('EMAIL_PASS')]);
     const transporter = nodemailer.createTransport({ service: 'gmail', auth: { user, pass }, connectionTimeout: 8000, socketTimeout: 10000 });
-    await transporter.sendMail({ from: user, to: recipient.value(), replyTo: inquiry.email,
-      subject: 'Echo Music — Investor deck request',
+    await transporter.sendMail({ from: user, to: recipient, replyTo: inquiry.email,
+      subject: 'echo music — Investor deck request',
       text: `Name: ${inquiry.name}\nEmail: ${inquiry.email}\nOrganization: ${inquiry.organization}\nLanguage: ${inquiry.locale}\nPrivacy acknowledged: yes\n\n${inquiry.message}` });
     res.json({ ok: true });
   } catch { res.status(503).json({ error: 'delivery_failed' }); }

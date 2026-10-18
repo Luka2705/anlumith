@@ -21,7 +21,10 @@ test('SEO tags use canonical language URLs, reciprocal alternates and factual ap
     assert.ok(html.includes('app-id=6749182326'));
     assert.ok(html.includes('og:image:width" content="1200'));
     const graph = seo.structuredData['@graph'];
-    assert.equal(graph.find(item => item['@type'] === 'MobileApplication').name, 'Echo Music');
+    assert.equal(graph.find(item => item['@type'] === 'MobileApplication').name, 'echo music');
+    assert.equal(graph.find(item => item['@type'] === 'Organization').email, 'info@anlumith.com');
+    assert.equal(graph.find(item => item['@type'] === 'WebSite').name, 'echo music');
+    assert.ok(seo.title.includes('echo music'));
     assert.equal(graph.find(item => item['@type'] === 'Person').name, 'Luka Juric');
     assert.equal(JSON.stringify(graph).includes('aggregateRating'), false);
     assert.equal(JSON.stringify(graph).includes('reviewRating'), false);
@@ -45,6 +48,14 @@ test('production renderer emits complete localized content without browser globa
   const server = await createServer({ configFile: false, server: { middlewareMode: true, ws: false, hmr: false }, appType: 'custom' });
   try {
     const { render } = await server.ssrLoadModule('/src/entry-server.jsx');
+    for (const route of [...investorRoutes, '/company/', '/kontakt/', '/impressum/', '/datenschutz/', '/cookies/']) {
+      const markup = render(route, route.split('/')[1] || 'en');
+      const text = markup.replace(/<[^>]*>/g, ' ');
+      assert.ok(!/\bEcho\b|\bECHO\b|\becho\b(?! music|[-_])/.test(text), `${route}: complete consistent brand`);
+      const destinations = [...markup.matchAll(/href="mailto:([^?"\s]+)/g)].map(match => match[1]);
+      assert.ok(destinations.length > 0 && destinations.every(address => address === 'info@anlumith.com'), `${route}: designated contact address`);
+      assert.ok(!markup.includes('href="tel:'), `${route}: contact actions use the designated inbox`);
+    }
     for (const [locale, strings] of Object.entries({ en, de, es })) {
       const home = render(`/${locale}`, locale);
       assert.ok(home.includes(strings.productSummary));

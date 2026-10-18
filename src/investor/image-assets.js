@@ -28,5 +28,5 @@ export const socialImage = Object.freeze({
   width: 1200,
   height: 630,
   type: 'image/jpeg',
-  alt: 'Echo Music. Social music discovery. Discover music. Share your world.',
+  alt: 'echo music. Social music discovery. Discover music. Share your world.',
 });

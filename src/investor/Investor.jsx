@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { ArrowUpRight, ArrowDown, ArrowRight, Check, Plus, Music2, Users, Globe2, RefreshCw } from 'lucide-react';
 import i18n, { detectLocale, formatNumber, locales } from './i18n.js';
 import { historicalSnapshot, HOUR, METRICS, PERIODS, snapshotState, validateSnapshot } from './metrics.js';
-import { company } from '../site.js';
+import { company, musicBrand } from '../site.js';
 import { updateSeo } from './seo.js';
 import { screenshotImages } from './image-assets.js';
 import CommunityWorldMap from './CommunityWorldMap.jsx';
@@ -12,7 +12,7 @@ import './investor-proof.css';
 const appStore = 'https://apps.apple.com/de/app/echo-music/id6749182326';
 const playStore = 'https://play.google.com/store/apps/details?id=com.anlumith.echo';
 const icons = [Music2, Users, Globe2];
-const mail = t => `mailto:${company.email}?subject=${encodeURIComponent(`Echo Music — ${t('deck')}`)}`;
+const mail = t => `mailto:${company.email}?subject=${encodeURIComponent(`${musicBrand.name} — ${t('deck')}`)}`;
 
 function Screenshot({ name, alt, priority = false, sizes = '(max-width: 600px) 44vw, 280px' }) {
   const image = screenshotImages[name];
@@ -109,9 +109,9 @@ function ContactForm({ t, locale }) {
 
 function LegalPage({ page, t, locale }) {
   return <main id="echo-content" className="echo-wrap echo-legal"><a href={`/${locale}`} className="text-link">← {t('back')}</a>
-    <p className="echo-eyebrow">ECHO MUSIC / ANLUMITH</p><h1>{t(page === 'privacy' ? 'privacyTitle' : page === 'cookies' ? 'storageTitle' : 'legalTitle')}</h1>
+    <p className="echo-eyebrow">{musicBrand.name} / ANLUMITH</p><h1>{t(page === 'privacy' ? 'privacyTitle' : page === 'cookies' ? 'storageTitle' : 'legalTitle')}</h1>
     {page === 'privacy' ? <><p>{t('privacyIntro')}</p><h2>{t('controller')}</h2><Address /><p>{t('privacyBody')}</p><p>{t('contactPrivacy')}</p><p>{t('privacyRights')}</p><p>{t('hostingNotice')}</p></>
-      : page === 'cookies' ? <><p>{t('storageBody')}</p><p>{t('hostingNotice')}</p></> : <><h2>{t('provider')}</h2><Address /><h2>{t('legalContact')}</h2><p><a href={`mailto:${company.email}`}>{company.email}</a><br /><a href={`tel:${company.phone.replace(/[^+\d]/g, '')}`}>{company.phone}</a></p><p>{t('hostingNotice')}</p></>}
+      : page === 'cookies' ? <><p>{t('storageBody')}</p><p>{t('hostingNotice')}</p></> : <><h2>{t('provider')}</h2><Address /><h2>{t('legalContact')}</h2><p><a href={`mailto:${company.email}`}>{company.email}</a><br /><span>{company.phone}</span></p><p>{t('hostingNotice')}</p></>}
   </main>;
 }
 function Address() { return <address>{company.legalName}<br />{company.legalForm}<br />{company.street}<br />{company.postalCode} {company.city}<br /><a href={`mailto:${company.email}`}>{company.email}</a></address>; }
@@ -174,13 +174,13 @@ export default function Investor({ initialLocale, initialPath } = {}) {
   const status = <span className={`data-status ${metrics.state}`}><i />{t(metrics.state)}{data.generatedAt ? <> · <time dateTime={new Date(data.generatedAt).toISOString()}>{new Intl.DateTimeFormat(locale, { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Europe/Berlin' }).format(data.generatedAt)} (Europe/Berlin)</time></> : <> · {t('unknownDate')}</>}</span>;
 
   return <div className="echo-site"><a className="skip" href="#echo-content">{t('skip')}</a>
-    <header className="echo-header"><div className="echo-wrap echo-nav"><a href={`/${locale}`} className="echo-wordmark" aria-label={t('home')}><img src="/echo-icon-64.png" alt="" width="34" height="34" /><span>echo<span className="logo-dot">.</span></span></a>
+    <header className="echo-header"><div className="echo-wrap echo-nav"><a href={`/${locale}`} className="echo-wordmark" aria-label={t('home')}><img src="/echo-icon-64.png" alt="" width="34" height="34" /><span>{musicBrand.name}<span className="logo-dot" aria-hidden="true">.</span></span></a>
       <nav className="echo-main-nav" aria-label={t('navigation')}><a href={section('product')}>{t('product')}</a><a href={section('world-map')}>{t('mapNav')}</a><a href={section('traction')}>{t('traction')}</a><a href={`/${locale}/investors`} aria-current={investorPage ? 'page' : undefined}>{t('investorNav')}</a></nav>
       <div className="echo-nav-right"><nav className="echo-languages" aria-label={t('language')}>{locales.map(next => <a href={`/${next}${subpage ? '/' + subpage : ''}`} lang={next} key={next} aria-current={next === locale ? 'true' : undefined} onClick={event => changeLanguage(event, next)}>{next.toUpperCase()}</a>)}</nav><a className="echo-button nav-deck" href={section('contact')}>{t('deck')}<ArrowUpRight size={16} /></a></div>
     </div></header>
     {!found ? <main id="echo-content" className="echo-wrap echo-legal"><h1>{t('notFound')}</h1><a href={`/${locale}`}>{t('back')}</a></main> : legalPage ? <LegalPage page={subpage} t={t} locale={locale} /> : investorPage ? <InvestorBrief data={data} status={status} t={t} locale={locale} n={n} /> : <main id="echo-content">
       <section className="echo-hero echo-wrap" aria-labelledby="echo-hero-title"><div className="hero-copy"><p className="echo-eyebrow"><span className="tiny-dot" />{t('investor')}</p><h1 id="echo-hero-title">{t('hero1')}<br /><em>{t('hero2')}</em></h1><p className="hero-sub">{t('heroSub')}</p><p className="hero-category">{t('productSummary')}</p><p className="hero-joined"><span className="joined-line" />{t('joined', { count: n(data.totalUsers) })}</p><p className="hero-data-note">{t(metrics.state === 'historical' ? 'historicalShort' : metrics.state)}</p><div className="hero-actions"><a className="echo-button primary" href="#product">{t('explore')}<ArrowUpRight size={18} /></a><a className="echo-button ghost" href="#traction">{t('seeTraction')}<ArrowDown size={17} /></a></div></div>
-        <div className="hero-visual"><div className="visual-top"><span>ECHO MUSIC</span><Music2 size={19} /></div><div className="hero-phone original-screen"><Screenshot name="feed-original" alt={t('feedVisual')} priority sizes="240px" /></div><div className="visual-caption"><span>{t('heroNote')}</span><span>↗</span></div></div>
+        <div className="hero-visual"><div className="visual-top"><span>{musicBrand.name}</span><Music2 size={19} /></div><div className="hero-phone original-screen"><Screenshot name="feed-original" alt={t('feedVisual')} priority sizes="240px" /></div><div className="visual-caption"><span>{t('heroNote')}</span><span>↗</span></div></div>
         <div className="hero-bottom"><span>{t('built')}</span><a href="#moment">{t('scroll')}<ArrowDown size={15} /></a><span>iOS & Android</span></div>
       </section>
 
@@ -210,10 +210,10 @@ export default function Investor({ initialLocale, initialPath } = {}) {
 
       <section id="opportunity" className="echo-opportunity section-space"><div className="echo-wrap"><p className="echo-eyebrow">{t('opportunityEyebrow')}</p><div className="section-top"><h2 className="display-heading">{t('opportunityTitle')}</h2><a href="#contact" className="text-link">{t('founder')}<ArrowUpRight size={18} /></a></div><div className="investor-next-grid"><article><Check size={20} /><h3>{t('proofBuiltTitle')}</h3><p>{t('proofBuiltBody')}</p></article><article><ArrowRight size={20} /><h3>{t('proofNextTitle')}</h3><p>{t('proofNextBody')}</p></article></div></div></section>
 
-      <section className="echo-faq echo-wrap section-space" aria-labelledby="echo-faq-title"><p className="echo-eyebrow">ECHO MUSIC</p><h2 id="echo-faq-title" className="display-heading">{t('faqTitle')}</h2><div>{t('faqs', { returnObjects: true }).map(item => <details key={item.question}><summary>{item.question}<Plus size={17} /></summary><p>{item.answer}</p></details>)}</div><a className="text-link" href={`/${locale}/investors`}>{t('investorBrief')}<ArrowUpRight size={17} /></a></section>
+      <section className="echo-faq echo-wrap section-space" aria-labelledby="echo-faq-title"><p className="echo-eyebrow">{musicBrand.name}</p><h2 id="echo-faq-title" className="display-heading">{t('faqTitle')}</h2><div>{t('faqs', { returnObjects: true }).map(item => <details key={item.question}><summary>{item.question}<Plus size={17} /></summary><p>{item.answer}</p></details>)}</div><a className="text-link" href={`/${locale}/investors`}>{t('investorBrief')}<ArrowUpRight size={17} /></a></section>
 
-      <section id="contact" className="echo-contact echo-wrap section-space"><div><p className="echo-eyebrow">{t('contactEyebrow')}</p><h2 className="display-heading">{t('contactTitle')}</h2><p className="section-body">{t('contactBody')}</p><a className="founder-link" href={mail(t)}>{company.legalName}<ArrowUpRight size={20} /><span>{t('founder')}</span></a><a className="text-link" href={appStore}>{t('exploreApp')}<ArrowUpRight size={17} /></a></div><ContactForm t={t} locale={locale} /></section>
+      <section id="contact" className="echo-contact echo-wrap section-space"><div><p className="echo-eyebrow">{t('contactEyebrow')}</p><h2 className="display-heading">{t('contactTitle')}</h2><p className="section-body">{t('contactBody')}</p><a className="founder-link" href={mail(t)}>{company.email}<ArrowUpRight size={20} /><span>{t('founder')}</span></a><a className="text-link" href={appStore}>{t('exploreApp')}<ArrowUpRight size={17} /></a></div><ContactForm t={t} locale={locale} /></section>
     </main>}
-    <footer className="echo-footer"><div className="echo-wrap"><div className="footer-top"><a href={`/${locale}`} className="echo-wordmark" aria-label={t('home')}><img src="/echo-icon-64.png" width="30" height="30" alt="" /><span>echo.</span></a><p>{t('footerLine')}</p><a href={section('contact')}>{t('founder')}<ArrowUpRight size={15} /></a></div><div className="footer-bottom"><p>© {new Date().getFullYear()} Echo Music · ANLUMITH. {t('rights')}</p><nav aria-label={t('imprint')}><a href={`/${locale}/investors`}>{t('investorNav')}</a><a href={`/${locale}/privacy`}>{t('privacy')}</a><a href={`/${locale}/imprint`}>{t('imprint')}</a><a href={`/${locale}/cookies`}>{t('cookies')}</a></nav></div></div></footer>
+    <footer className="echo-footer"><div className="echo-wrap"><div className="footer-top"><a href={`/${locale}`} className="echo-wordmark" aria-label={t('home')}><img src="/echo-icon-64.png" width="30" height="30" alt="" /><span>{musicBrand.name}<span className="logo-dot" aria-hidden="true">.</span></span></a><p>{t('footerLine')}</p><a href={mail(t)}>{t('founder')}<ArrowUpRight size={15} /></a></div><div className="footer-bottom"><p>© {new Date().getFullYear()} {musicBrand.name} · ANLUMITH. {t('rights')}</p><nav aria-label={t('imprint')}><a href={`/${locale}/investors`}>{t('investorNav')}</a><a href={`/${locale}/privacy`}>{t('privacy')}</a><a href={`/${locale}/imprint`}>{t('imprint')}</a><a href={`/${locale}/cookies`}>{t('cookies')}</a></nav></div></div></footer>
   </div>;
 }

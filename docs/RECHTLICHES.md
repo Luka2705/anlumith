@@ -6,8 +6,8 @@ Die Texte sind auf eine Unternehmenswebsite mit Produktlinks, E-Mail- und Telefo
 
 - Marke ANLUMITH; Anbieter und datenschutzrechtlich Verantwortlicher Luka Juric, Einzelunternehmen.
 - Obstweg 5, 70771 Leinfelden-Echterdingen, Deutschland.
-- luka@anlumith.com und +49 178 2380948.
-- Kein eigenes Tracking oder eingebetteter Fremdinhalt, Newsletter, Login oder Shop. Echo-Investorenseiten bieten eine Anfragefunktion und speichern die Sprachwahl lokal; vor Veröffentlichung die Anbieter, Aufbewahrung und Übermittlungen dafür prüfen. Siehe [Investor-Integration](INVESTOR.md).
+- info@anlumith.com und +49 178 2380948.
+- Kein eigenes Tracking oder eingebetteter Fremdinhalt, Newsletter, Login oder Shop. Investorenseiten von echo music bieten eine Anfragefunktion und speichern die Sprachwahl lokal; vor Veröffentlichung die Anbieter, Aufbewahrung und Übermittlungen dafür prüfen. Siehe [Investor-Integration](INVESTOR.md).
 - Cloudflare Pages als vorgesehenes Hosting, iCloud Mail als Kontaktpostfach.
 - Impressum von jeder Seite aus erreichbar. Die Datenschutztexte der Apps werden nicht durch diese Website ersetzt.
 

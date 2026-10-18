@@ -1,4 +1,4 @@
-# Echo Music: Suchmaschinen, App-Suche und Veröffentlichung
+# echo music: Suchmaschinen, App-Suche und Veröffentlichung
 
 Stand: 17. Oktober 2026. Diese Umsetzung verbessert technische Auffindbarkeit und eine klare Produkt-/Investorenansprache. Sie verspricht weder Platz 1 noch eine Finanzierung. Google garantiert keine bestimmte Platzierung; bezahlte Anzeigen kaufen keine bessere organische Position. [Google zur Auswahl von SEO-Dienstleistungen](https://developers.google.com/search/docs/fundamentals/do-i-need-seo)
 
@@ -6,12 +6,12 @@ Stand: 17. Oktober 2026. Diese Umsetzung verbessert technische Auffindbarkeit un
 
 - Vollständiges vorgerendertes HTML für die EN/DE/ES-Startseiten, Investorenseiten und rechtlichen Unterseiten. Suchmaschinen und Link-Vorschauen müssen den Text nicht erst durch JavaScript erzeugen. React übernimmt anschließend die vorhandene Oberfläche; die Firebase-Zahlen aktualisieren sich weiter clientseitig. [Google: JavaScript-SEO](https://developers.google.com/search/docs/crawling-indexing/javascript/javascript-seo-basics)
 - Eigene Investorenseiten unter `/en/investors`, `/de/investors`, `/es/investors`: Produkt, definierte Kennzahlen, Gründer, Produktrichtung und direkter Kontakt. Keine erfundene Finanzierungsrunde, Rendite, Retention, Kundenliste oder Partnerschaft.
-- Klare, sprachspezifische Titel und Beschreibungen zu „Echo Music“, Social Music Discovery, Song-Sharing und Weltkarte. Sichtbare Produktdefinition und Antworten auf echte Produkt-/Gründerfragen. [Google: hilfreiche Titel](https://developers.google.com/search/docs/appearance/title-link)
+- Klare, sprachspezifische Titel und Beschreibungen zu „echo music“, Social Music Discovery, Song-Sharing und Weltkarte. Sichtbare Produktdefinition und Antworten auf echte Produkt-/Gründerfragen. [Google: hilfreiche Titel](https://developers.google.com/search/docs/appearance/title-link)
 - Einheitlicher SEO-Generator für statisches HTML und Browsernavigation: selbstreferenzierende Canonicals, vollständige Sprachalternativen mit `x-default`, Open Graph und Twitter-Vorschauen. Absolute URLs werden erst mit einer konfigurierten Hauptdomain ausgegeben. [Google: Sprachversionen](https://developers.google.com/search/docs/specialty/international/localized-versions)
 - `Organization`, `Person`, `WebSite`, `WebPage` und `MobileApplication` als JSON-LD mit realer Marke, Betreiber, Gründer und Store-Links. Es werden keine Sterne, Rezensionen, Rankings oder Finanzierungsdaten erfunden. Ohne belegte Reviews wird keine Eignung für Googles Software-App-Rich-Result behauptet. [Google: Organization](https://developers.google.com/search/docs/appearance/structured-data/organization), [Software-App-Pflichtangaben](https://developers.google.com/search/docs/appearance/structured-data/software-app)
 - Echte Apple-App-ID im Smart App Banner; kleine Browser- und iOS-Icons. Dies unterstützt den Übergang von der Website in den App Store und ist kein zugesagter Rankingbonus. [Apple: Smart App Banners](https://developer.apple.com/documentation/webkit/promoting-apps-with-smart-app-banners)
 - Neun responsive WebP-Dateien, passende `srcset`/`sizes`, priorisiertes Einstiegsbild und verzögertes Laden weiterer Bilder. Bei 600 px sind die Dateien 96–98 % kleiner. Unveränderte Original-PNGs bleiben für die vergrößerte Ansicht erreichbar.
-- Echtes 1200×630-Vorschaubild mit vorhandenem Echo-Logo und Produktbeschreibung, ohne alternde Kennzahlen.
+- Echtes 1200×630-Vorschaubild mit vorhandenem echo music-Logo und Produktbeschreibung, ohne alternde Kennzahlen.
 - Saubere statische Sprach-URLs, Weiterleitungen für frühere Slash-Varianten, `404.html` für fehlende Seiten, API-Routing separat. Sitemap mit Sprachalternativen und robots.txt werden aus der finalen Domain/Veröffentlichungsfreigabe erzeugt. Keine Sitemap-Daten oder `lastmod`-Zeitpunkte werden erfunden.
 
 ## Was die öffentliche Indexierung aktuell verhindert

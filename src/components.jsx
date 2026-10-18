@@ -7,7 +7,7 @@ export function Email() {
   return <a href={`mailto:${company.email}`}>{company.email}</a>;
 }
 export function Phone() {
-  return company.phone && <a href={`tel:${company.phone.replace(/[^+\d]/g, '')}`}>{company.phone}</a>;
+  return company.phone && <span>{company.phone}</span>;
 }
 export function Address() {
   return <>{company.legalName}<br />{company.legalForm}<br />{company.street}<br />{company.postalCode} {company.city}<br />{company.country}</>;

@@ -2,6 +2,7 @@ import site from './site.json' with { type: 'json' };
 
 export default site;
 export const { company, legal, products } = site;
+export const musicBrand = products.find(product => product.theme === 'echo');
 export const requiredFields = {
   'company.legalName': company.legalName,
   'company.legalForm': company.legalForm,
