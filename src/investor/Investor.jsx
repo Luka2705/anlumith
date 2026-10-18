@@ -13,7 +13,15 @@ import './industry-opportunity.css';
 
 const appStore = 'https://apps.apple.com/de/app/echo-music/id6749182326';
 const playStore = 'https://play.google.com/store/apps/details?id=com.anlumith.echo';
-const mail = t => `mailto:${company.email}?subject=${encodeURIComponent(`${musicBrand.name} — ${t('deck')}`)}`;
+const mail = (t, subject = 'deck') => `mailto:${company.email}?subject=${encodeURIComponent(`${musicBrand.name} — ${t(subject)}`)}`;
+const marketSources = [
+  ['sourceApple', 'https://performance-partners.apple.com/commissions-payments'],
+  ['sourceEligibility', 'https://performance-partners.apple.com/partners'],
+  ['sourceSony', 'https://realtimeinsights.sonymusic.com/'],
+  ['sourceCompetition', 'https://www.linkfire.com/pricing'],
+  ['sourceSocial', 'https://i.airbuds.fm/radioapple'],
+  ['sourceAppleSocial', 'https://support.apple.com/guide/iphone/intro-to-playlists-iph06a7aabc6/ios'],
+];
 
 function OrganicGrowth({ t }) {
   return <p className="organic-growth"><Sprout size={16} aria-hidden="true" /><span>{t('organicGrowth')}</span></p>;
@@ -53,9 +61,11 @@ function IndustryOpportunity({ t, locale, detailed = false }) {
       {detailed ? <>
         <div className="investment-thesis"><h2>{t('investmentTitle')}</h2><p>{t('investmentBody')}</p><p>{t('investmentProof')}</p></div>
         <div className="industry-revenue"><h2>{t('revenueTitle')}</h2><div className="industry-models">{cards('revenueModels')}</div><p className="industry-status">{t('revenueStatus')}</p></div>
+        <div className="industry-economics"><h2>{t('economicsTitle')}</h2><p>{t('economicsBody')}</p></div>
+        <div className="industry-competition"><h2>{t('competitiveTitle')}</h2><p>{t('competitiveBody')}</p><details className="industry-sources"><summary>{t('marketSources')}</summary><ul>{marketSources.map(([label, href]) => <li key={label}><a href={href} target="_blank" rel="noreferrer">{t(label)}<ArrowUpRight size={12} /></a></li>)}</ul></details></div>
         <div className="industry-pilot"><h2>{t('pilotTitle')}</h2><p>{t('pilotBody')}</p><p className="industry-status">{t('pilotMeasure')}</p></div>
         <div className="industry-funding"><h2>{t('fundingTitle')}</h2><ol>{t('fundingSteps', { returnObjects: true }).map(item => <li key={item.title}><h3>{item.title}</h3><p>{item.body}</p></li>)}</ol></div>
-        <a className="text-link" href={mail(t)}>{t('industryContact')}<ArrowUpRight size={18} /></a>
+        <a className="text-link" href={mail(t, 'industryContact')}>{t('industryContact')}<ArrowUpRight size={18} /></a>
       </> : <a className="text-link" href={`/${locale}/investors#opportunity`}>{t('industryMore')}<ArrowUpRight size={18} /></a>}
     </div>
   </section>;
