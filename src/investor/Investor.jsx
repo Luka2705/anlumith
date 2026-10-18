@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ArrowUpRight, ArrowDown, ArrowRight, Check, Plus, Music2, Users, Globe2, RefreshCw } from 'lucide-react';
+import { ArrowUpRight, ArrowDown, ArrowRight, Check, Plus, Music2, Users, Globe2, RefreshCw, Sprout } from 'lucide-react';
 import i18n, { detectLocale, formatNumber, locales } from './i18n.js';
 import { historicalSnapshot, HOUR, METRICS, PERIODS, snapshotState, validateSnapshot } from './metrics.js';
 import { company, musicBrand } from '../site.js';
@@ -14,6 +14,10 @@ const playStore = 'https://play.google.com/store/apps/details?id=com.anlumith.ec
 const icons = [Music2, Users, Globe2];
 const mail = t => `mailto:${company.email}?subject=${encodeURIComponent(`${musicBrand.name} — ${t('deck')}`)}`;
 
+function OrganicGrowth({ t }) {
+  return <p className="organic-growth"><Sprout size={16} aria-hidden="true" /><span>{t('organicGrowth')}</span></p>;
+}
+
 function Screenshot({ name, alt, priority = false, sizes = '(max-width: 600px) 44vw, 280px' }) {
   const image = screenshotImages[name];
   return <img src={image.src} srcSet={image.srcSet} sizes={sizes} alt={alt} width={image.width} height={image.height}
@@ -24,14 +28,15 @@ function InvestorBrief({ data, status, t, locale, n }) {
   return <main id="echo-content" className="echo-wrap investor-brief section-space">
     <p className="echo-eyebrow">{t('investorBrief')}</p><h1 className="display-heading">{t('investorPageTitle')}</h1>
     <p className="investor-position">{t('investorPosition')}</p><p className="section-body">{t('investorIntro')}</p>
+    <OrganicGrowth t={t} />
     <div className="hero-actions"><a className="echo-button primary" href="#contact">{t('deck')}<ArrowUpRight size={18} /></a><a className="text-link" href={`/${locale}#product`}>{t('explore')}<ArrowUpRight size={18} /></a></div>
-    <section className="brief-traction" aria-labelledby="brief-traction-title"><h2 id="brief-traction-title">{t('proofTitle')}</h2>{status}
+    <section className="brief-traction" aria-labelledby="brief-traction-title"><h2 id="brief-traction-title">{t('proofTitle')}</h2><OrganicGrowth t={t} />{status}
       <dl className="brief-numbers">{['newUsers', 'contributors', 'sharedSongs'].map(key => <div key={key}><dt>{t(key)}</dt><dd>{n(data.periods['3m'][key])}</dd><small>{t('proofPeriod')}</small></div>)}</dl>
-      <p className="section-body">{t(data.source === 'firebase' ? 'liveContributorDef' : 'contributorDef')}</p><a className="text-link" href={`/${locale}#traction`}>{t('definitions')}<ArrowUpRight size={17} /></a>
+      <p className="section-body">{t(data.source === 'firebase' ? 'liveContributorDef' : 'contributorDef')}</p><details className="organic-source"><summary>{t('definitions')}</summary><p>{t('organicSource')}</p></details><a className="text-link" href={`/${locale}#traction`}>{t('definitions')}<ArrowUpRight size={17} /></a>
     </section>
     <CommunityWorldMap locale={locale} t={t} embedded />
     <section className="brief-story"><div><h2>{t('investorOpportunity')}</h2><p>{t('investorOpportunityBody')}</p><a className="text-link" href={`/${locale}#world-map`}>{t('mapNav')}<ArrowUpRight size={17} /></a></div><div><h2>{t('founderTitle')}</h2><p>{t('founderBody')}</p><a className="text-link" href={mail(t)}>{t('founder')}<ArrowUpRight size={17} /></a></div></section>
-    <section id="contact" className="brief-contact"><div><p className="echo-eyebrow">{t('contactEyebrow')}</p><h2>{t('investorDiligence')}</h2><p className="section-body">{t('investorDiligenceBody')}</p><a className="text-link" href={mail(t)}>{company.email}<ArrowUpRight size={17} /></a></div><ContactForm t={t} locale={locale} /></section>
+    <section id="contact" className="brief-contact"><div><p className="echo-eyebrow">{t('contactEyebrow')}</p><h2>{t('investorDiligence')}</h2><OrganicGrowth t={t} /><p className="section-body">{t('organicContact')}</p><p className="section-body">{t('investorDiligenceBody')}</p><a className="text-link" href={mail(t)}>{company.email}<ArrowUpRight size={17} /></a></div><ContactForm t={t} locale={locale} /></section>
   </main>;
 }
 
@@ -179,13 +184,13 @@ export default function Investor({ initialLocale, initialPath } = {}) {
       <div className="echo-nav-right"><nav className="echo-languages" aria-label={t('language')}>{locales.map(next => <a href={`/${next}${subpage ? '/' + subpage : ''}`} lang={next} key={next} aria-current={next === locale ? 'true' : undefined} onClick={event => changeLanguage(event, next)}>{next.toUpperCase()}</a>)}</nav><a className="echo-button nav-deck" href={section('contact')}>{t('deck')}<ArrowUpRight size={16} /></a></div>
     </div></header>
     {!found ? <main id="echo-content" className="echo-wrap echo-legal"><h1>{t('notFound')}</h1><a href={`/${locale}`}>{t('back')}</a></main> : legalPage ? <LegalPage page={subpage} t={t} locale={locale} /> : investorPage ? <InvestorBrief data={data} status={status} t={t} locale={locale} n={n} /> : <main id="echo-content">
-      <section className="echo-hero echo-wrap" aria-labelledby="echo-hero-title"><div className="hero-copy"><p className="echo-eyebrow"><span className="tiny-dot" />{t('investor')}</p><h1 id="echo-hero-title">{t('hero1')}<br /><em>{t('hero2')}</em></h1><p className="hero-sub">{t('heroSub')}</p><p className="hero-category">{t('productSummary')}</p><p className="hero-joined"><span className="joined-line" />{t('joined', { count: n(data.totalUsers) })}</p><p className="hero-data-note">{t(metrics.state === 'historical' ? 'historicalShort' : metrics.state)}</p><div className="hero-actions"><a className="echo-button primary" href="#product">{t('explore')}<ArrowUpRight size={18} /></a><a className="echo-button ghost" href="#traction">{t('seeTraction')}<ArrowDown size={17} /></a></div></div>
+      <section className="echo-hero echo-wrap" aria-labelledby="echo-hero-title"><div className="hero-copy"><p className="echo-eyebrow"><span className="tiny-dot" />{t('investor')}</p><h1 id="echo-hero-title">{t('hero1')}<br /><em>{t('hero2')}</em></h1><p className="hero-sub">{t('heroSub')}</p><p className="hero-category">{t('productSummary')}</p><p className="hero-joined"><span className="joined-line" />{t('joined', { count: n(data.totalUsers) })}</p><p className="hero-data-note">{t(metrics.state === 'historical' ? 'historicalShort' : metrics.state)}</p><OrganicGrowth t={t} /><div className="hero-actions"><a className="echo-button primary" href="#product">{t('explore')}<ArrowUpRight size={18} /></a><a className="echo-button ghost" href="#traction">{t('seeTraction')}<ArrowDown size={17} /></a></div></div>
         <div className="hero-visual"><div className="visual-top"><span>{musicBrand.name}</span><Music2 size={19} /></div><div className="hero-phone original-screen"><Screenshot name="feed-original" alt={t('feedVisual')} priority sizes="240px" /></div><div className="visual-caption"><span>{t('heroNote')}</span><span>↗</span></div></div>
         <div className="hero-bottom"><span>{t('built')}</span><a href="#moment">{t('scroll')}<ArrowDown size={15} /></a><span>iOS & Android</span></div>
       </section>
 
       <section id="moment" className="traction-moment"><div className="echo-wrap"><div className="moment-heading"><p className="echo-eyebrow">{t('actual')}</p><h2>{t('moment1')}<br /><span>{t('moment2')}</span></h2><p>{t('momentIntro')}</p></div><div className="moment-total"><strong className="number-reveal">{n(data.totalUsers)}</strong><div><span>{t('totalUsers')}</span><small>{t(metrics.state === 'historical' ? 'historicalShort' : metrics.state)}</small></div></div>
-      <div className="moment-foot"><span>{t('built')}</span><a href="#traction">{t('seeTraction')}<ArrowDown size={16} /></a></div></div></section>
+      <div className="moment-foot"><span>{t('organicGrowth')}</span><a href="#traction">{t('seeTraction')}<ArrowDown size={16} /></a></div></div></section>
 
       <section id="product" className="echo-product echo-wrap section-space"><div className="product-copy"><p className="echo-eyebrow">{t('productEyebrow')}</p><h2 className="display-heading">{t('productTitle')}</h2><p className="section-body">{t('productBody')}</p><ul className="product-features">{['productFeature1', 'productFeature2', 'mapFeature'].map((key, index) => { const Icon = icons[index]; return <li key={key}><Icon size={19} />{t(key)}</li>; })}</ul><div className="store-links"><a href={appStore}>{t('ios')}<ArrowUpRight size={16} /></a><a href={playStore}>{t('android')}<ArrowUpRight size={16} /></a></div></div><div className="product-visuals"><div className="product-phone phone-back original-screen"><Screenshot name="map-asia" alt={t('mapVisualAsia')} /></div><div className="product-phone phone-front original-screen"><Screenshot name="feed-original" alt={t('feedVisual')} /></div><span className="visual-source">{t('providedVisuals')}</span></div></section>
 
@@ -194,7 +199,7 @@ export default function Investor({ initialLocale, initialPath } = {}) {
 
       <section id="traction" className="investor-proof section-space" aria-labelledby="proof-title"><div className="echo-wrap">
         <div className="section-top"><div><p className="echo-eyebrow">{t('proofEyebrow')}</p><h2 id="proof-title" className="display-heading">{t('proofTitle')}</h2><p className="section-body">{t('proofIntro')}</p></div><a className="text-link" href="#contact">{t('deck')}<ArrowUpRight size={18} /></a></div>
-        <div className="proof-meta"><span>{t('proofPeriod')}</span>{status}</div>
+        <OrganicGrowth t={t} /><div className="proof-meta"><span>{t('proofPeriod')}</span>{status}</div>
         <div className="proof-grid" aria-live="polite" aria-atomic="true">{[
           { key: 'newUsers', title: 'proofAcquisitionTitle', body: 'proofAcquisitionBody' },
           { key: 'contributors', title: 'proofParticipationTitle', body: 'proofParticipationBody' },
@@ -204,7 +209,7 @@ export default function Investor({ initialLocale, initialPath } = {}) {
         <details className="proof-details"><summary>{t('proofDetails')}<Plus size={17} /></summary><div className="proof-details-body">
           <div className="dashboard-toolbar"><p>{t('periodLabel')}</p><div className="period-selector" role="group" aria-label={t('periodLabel')}>{PERIODS.map(key => <button key={key} type="button" aria-pressed={period === key} onClick={() => setPeriod(key)}>{t(`periods.${key}`)}</button>)}</div></div>
           <dl className="proof-detail-values" aria-live="polite" aria-atomic="true">{['totalUsers', ...METRICS].map(key => <div key={key}><dt>{t(key)}<Definition metric={key} data={data} t={t} /></dt><dd>{n(key === 'totalUsers' ? data.totalUsers : current[key])}</dd><small>{t(key === 'totalUsers' ? metrics.state === 'historical' ? 'historical' : 'lastRefresh' : `periods.${period}`)}</small></div>)}</dl>
-          <div className="proof-definitions">{['totalUsers', ...METRICS].map(key => <div key={key}><h4>{t(key)}</h4><p>{t({ totalUsers: 'totalDef', newUsers: 'newDef', activeUsers: 'activeDef', contributors: data.source === 'firebase' ? 'liveContributorDef' : 'contributorDef', sharedSongs: 'songDef' }[key])}</p></div>)}</div><p className="proof-period-definition">{t('periodsDef')}</p>
+          <div className="proof-definitions">{['totalUsers', ...METRICS].map(key => <div key={key}><h4>{t(key)}</h4><p>{t({ totalUsers: 'totalDef', newUsers: 'newDef', activeUsers: 'activeDef', contributors: data.source === 'firebase' ? 'liveContributorDef' : 'contributorDef', sharedSongs: 'songDef' }[key])}</p></div>)}</div><p className="proof-period-definition">{t('periodsDef')}</p><p className="proof-period-definition">{t('organicSource')}</p>
         </div></details>
       </div></section>
 
@@ -212,7 +217,7 @@ export default function Investor({ initialLocale, initialPath } = {}) {
 
       <section className="echo-faq echo-wrap section-space" aria-labelledby="echo-faq-title"><p className="echo-eyebrow">{musicBrand.name}</p><h2 id="echo-faq-title" className="display-heading">{t('faqTitle')}</h2><div>{t('faqs', { returnObjects: true }).map(item => <details key={item.question}><summary>{item.question}<Plus size={17} /></summary><p>{item.answer}</p></details>)}</div><a className="text-link" href={`/${locale}/investors`}>{t('investorBrief')}<ArrowUpRight size={17} /></a></section>
 
-      <section id="contact" className="echo-contact echo-wrap section-space"><div><p className="echo-eyebrow">{t('contactEyebrow')}</p><h2 className="display-heading">{t('contactTitle')}</h2><p className="section-body">{t('contactBody')}</p><a className="founder-link" href={mail(t)}>{company.email}<ArrowUpRight size={20} /><span>{t('founder')}</span></a><a className="text-link" href={appStore}>{t('exploreApp')}<ArrowUpRight size={17} /></a></div><ContactForm t={t} locale={locale} /></section>
+      <section id="contact" className="echo-contact echo-wrap section-space"><div><p className="echo-eyebrow">{t('contactEyebrow')}</p><h2 className="display-heading">{t('contactTitle')}</h2><OrganicGrowth t={t} /><p className="section-body">{t('organicContact')}</p><a className="founder-link" href={mail(t)}>{company.email}<ArrowUpRight size={20} /><span>{t('founder')}</span></a><a className="text-link" href={appStore}>{t('exploreApp')}<ArrowUpRight size={17} /></a></div><ContactForm t={t} locale={locale} /></section>
     </main>}
     <footer className="echo-footer"><div className="echo-wrap"><div className="footer-top"><a href={`/${locale}`} className="echo-wordmark" aria-label={t('home')}><img src="/echo-icon-64.png" width="30" height="30" alt="" /><span>{musicBrand.name}<span className="logo-dot" aria-hidden="true">.</span></span></a><p>{t('footerLine')}</p><a href={mail(t)}>{t('founder')}<ArrowUpRight size={15} /></a></div><div className="footer-bottom"><p>© {new Date().getFullYear()} {musicBrand.name} · ANLUMITH. {t('rights')}</p><nav aria-label={t('imprint')}><a href={`/${locale}/investors`}>{t('investorNav')}</a><a href={`/${locale}/privacy`}>{t('privacy')}</a><a href={`/${locale}/imprint`}>{t('imprint')}</a><a href={`/${locale}/cookies`}>{t('cookies')}</a></nav></div></div></footer>
   </div>;

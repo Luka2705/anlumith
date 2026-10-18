@@ -21,7 +21,9 @@ Before the first fetch, or if no live fetch succeeds, the UI uses the owner-supp
 | 4 weeks | 4,412 | 4,878 | 1,939 | 2,286 |
 | 3 months | 12,570 | 13,299 | 5,198 | 6,112 |
 
-Total registered accounts: **27,815**. The supplied +51.5% appears only for the 24-hour filter and is explicitly one comparison against the preceding 24 hours. No retention, virality, paid-acquisition, projection or conversion-rate claims are made. The unvalidated 39.1% ratio is deliberately absent.
+Historical registered accounts: **27,815** in the supplied snapshot. The earlier +51.5% comparison remains in the supplied source data but is not displayed in the simplified investor story. No retention, virality, projection or conversion-rate claims are made. The unvalidated 39.1% ratio is deliberately absent.
+
+On **October 18, 2026**, the owner explicitly confirmed that echo music’s growth to date was organic and that cumulative paid advertising expenditure was **€0**. This is a persistent marketing message in the hero, community headline, traction summary, contact area, investor page, FAQ, search descriptions and share card. The methodology disclosure and FAQ identify it as owner-reported. Firebase supplies community counts; it does not verify ad expenditure. The statement does not establish zero acquisition costs, a channel attribution split, retention or virality.
 
 All hero, headline and investor summary figures consume the same snapshot state. A successful API refresh replaces them together. Network failure preserves the last successful snapshot. Firebase data older than two hours is marked overdue, never live. The timestamp is the upstream generation time, displayed in the selected locale and Europe/Berlin timezone. Fetching the data does not rewrite the timestamp.
 
@@ -140,4 +142,4 @@ The revised compact map, fresh-data live label and combined three-figure investo
 5. Provider/transfer/retention settings and reviewed legal notices for the actual deployed setup on anlumith.com.
 6. An approved, semantically explicit public historical-series contract if trend charts are added.
 
-Do not claim live metrics, functioning hosted email delivery, a verified acquisition channel mix, retention, virality or numerical projections until those facts are verified.
+Only claim live metrics or functioning hosted email delivery where their runtime integration is verified. The organic-growth/€0-advertising statement is owner-confirmed, not an independently audited acquisition channel mix. Do not infer retention, virality, zero acquisition costs or numerical projections from it.

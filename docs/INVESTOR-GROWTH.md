@@ -1,6 +1,6 @@
 # echo music: 30 Tage für Auffindbarkeit und Investorengespräche
 
-Stand: **17. Oktober 2026**, Europe/Berlin. Arbeitszeitraum: **17. Oktober bis 15. November 2026**. Bestätigte Hauptdomain: **https://anlumith.com**. Der Betreiber wünscht **keine bezahlte Werbung**. Dieses Dokument enthält einen organischen Arbeitsplan und verwendbare Textentwürfe. Es wurden keine Kontakte angeschrieben, Bewerbungen eingereicht oder Werbekampagnen aktiviert.
+Stand: **17. Oktober 2026**, Europe/Berlin. Arbeitszeitraum: **17. Oktober bis 15. November 2026**. Bestätigte Hauptdomain: **https://anlumith.com**. Der Betreiber wünscht **keine bezahlte Werbung**. Am **18. Oktober 2026** hat er außerdem bestätigt: Das bisherige Wachstum von echo music war organisch, bei **0 € kumulierten Werbeausgaben**. Diese Betreiberangabe ist eine wiederkehrende Kernbotschaft; sie ist von den Firebase-Kennzahlen zu unterscheiden. Dieses Dokument enthält einen organischen Arbeitsplan und verwendbare Textentwürfe. Es wurden keine Kontakte angeschrieben, Bewerbungen eingereicht oder Werbekampagnen aktiviert.
 
 Das Ziel ist, echo music für passende Musik- und Consumer-Tech-Investoren verständlich, auffindbar und prüfbar zu machen. Eine bestimmte Google-Position, ein Apple-Feature oder eine Finanzierung lässt sich daraus nicht versprechen. Google nennt ausdrücklich keine automatische Methode für Platz 1; Suchänderungen können Wochen oder Monate benötigen. [Google: SEO Starter Guide](https://developers.google.com/search/docs/fundamentals/seo-starter-guide)
 

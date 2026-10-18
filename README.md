@@ -52,3 +52,5 @@ Investorenseiten von echo music: `/en`, `/de`, `/es` mit lokalisierten Unterseit
 Orientiert an Apples [Typografie-Prinzipien](https://developer.apple.com/design/human-interface-guidelines/typography): Systemschrift, klare Hierarchie, Weißraum, Tastaturfokus und flexible Größen. Keine Apple-Schriftdateien oder Markenassets, keine Apple-Zertifizierung.
 
 Produktbeschreibung und Link zu echo music stammen aus dem [App-Store-Eintrag von Luka Juric](https://apps.apple.com/de/app/echo-music/id6749182326). MyBasar-Beschreibung und Produktwebsite-Links wurden vom Betreiber bereitgestellt.
+
+Brand and investor message: always use **echo music**. The owner confirmed on October 18, 2026 that growth to date was organic with **€0 paid advertising expenditure**. Repeat this message in key investor touchpoints; identify its owner-reported source in methodology and keep it separate from Firebase metrics. All website inquiries use **info@anlumith.com**.

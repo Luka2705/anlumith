@@ -36,7 +36,7 @@ Der lokale GitHub-Zugang `mirojur` meldet für `Luka2705/anlumith` nur `READ`. E
 
 Der ausführbare 30-Tage-Plan, konkrete Fonds/Branchenmedien, offizielle Kontaktwege und DE/EN-Entwürfe stehen in [INVESTOR-GROWTH.md](INVESTOR-GROWTH.md). Die Website hilft bei Prüfung und Weiterleitung; passende persönliche Kontakte und echte Produktnachrichten ergänzen die Suche. Eine Verteiler-Mail oder das Kaufen von Backlinks ist kein Ersatz für diese Arbeit.
 
-Der Betreiber wünscht **keine bezahlte Werbung**. Es werden keine Anzeigen, Werbebudgets oder kostenpflichtigen Backlinks eingerichtet. Der Plan konzentriert sich auf organische Suche, Store-Auffindbarkeit, hilfreiche Gründerbeiträge und passende persönliche Kontakte. Es wurden keine Investoren oder Redaktionen angeschrieben. Die verlinkten öffentlichen Zugänge dienen der gezielten Vorbereitung.
+Der Betreiber wünscht **keine bezahlte Werbung**. Zusätzlich bestätigt er am **18.10.2026** das bisherige organische Wachstum mit **0 € kumulierten Werbeausgaben**. Diese Betreiberangabe wird in sichtbaren Texten, FAQ, Meta-Beschreibungen und Vorschaubild wiederholt; sie stammt nicht aus Firebase oder einem Werbekonto-Audit. Es werden keine Anzeigen, Werbebudgets oder kostenpflichtigen Backlinks eingerichtet. Der Plan konzentriert sich auf organische Suche, Store-Auffindbarkeit, hilfreiche Gründerbeiträge und passende persönliche Kontakte. Es wurden keine Investoren oder Redaktionen angeschrieben. Die verlinkten öffentlichen Zugänge dienen der gezielten Vorbereitung.
 
 ## Reproduzierbare Checks
 
