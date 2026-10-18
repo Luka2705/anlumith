@@ -1,11 +1,52 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createServer } from 'vite';
-import { pageSeo, seoTags, investorRoutes, safeJson } from '../src/investor/seo.js';
+import { pageSeo, seoTags, investorRoutes, safeJson, escapeHtml } from '../src/investor/seo.js';
+import { getScreenshotImage, getSocialImage, socialImage } from '../src/investor/image-assets.js';
 import { robotsTxt, sitemapXml } from '../server/search-assets.js';
 import { en, de, es } from '../src/investor/translations.js';
 import { createElement } from 'react';
 import { renderToString } from 'react-dom/server';
+
+const screenshotNames = ['feed-original', 'diary-original', 'map-americas', 'map-asia'];
+
+function assertLocalizedScreenshots(markup, locale, names = screenshotNames) {
+  const imageTags = [...markup.matchAll(/<img\b[^>]*>/g)].map(match => match[0]);
+  for (const name of names) {
+    const image = getScreenshotImage(name, locale);
+    const tag = imageTags.find(tag => tag.includes(`src="${image.src}"`));
+    assert.ok(tag, `${locale}/${name}: localized screenshot source`);
+    assert.ok(tag.includes(`srcSet="${image.srcSet}"`), `${locale}/${name}: responsive localized alternatives`);
+  }
+  for (const name of names.filter(name => name !== 'feed-original')) {
+    assert.ok(markup.includes(`href="${getScreenshotImage(name, locale).original}"`), `${locale}/${name}: matching full-size link`);
+  }
+  assert.ok([...markup.matchAll(/(?:src|srcSet|href)="(\/echo\/localized\/[^"\s]+)/g)].every(match => match[1].startsWith(`/echo/localized/${locale}/`)), `${locale}: screenshots never use another language`);
+}
+
+test('localized screenshot and social assets have complete language paths and English fallbacks', () => {
+  for (const locale of ['en', 'de', 'es']) {
+    for (const name of screenshotNames) {
+      const image = getScreenshotImage(name, locale);
+      assert.equal(image.src, `/echo/localized/${locale}/${name}-600.webp`);
+      assert.equal(image.original, `/echo/localized/${locale}/${name}.png`);
+      assert.equal(image.srcSet, [360, 600, 900].map(width => `/echo/localized/${locale}/${name}-${width}.webp ${width}w`).join(', '));
+      assert.equal(image.width, 1206);
+      assert.equal(image.height, 2622);
+    }
+    const social = getSocialImage(locale);
+    assert.equal(social.src, `/echo/localized/${locale}/echo-music-investors.jpg`);
+    assert.equal(social.width, 1200);
+    assert.equal(social.height, 630);
+    assert.equal(social.type, 'image/jpeg');
+    assert.ok(social.alt.length > 20);
+  }
+  assert.equal(getScreenshotImage('feed-original', 'fr'), getScreenshotImage('feed-original', 'en'));
+  assert.equal(getScreenshotImage('diary-original'), getScreenshotImage('diary-original', 'en'));
+  assert.equal(getSocialImage('fr'), getSocialImage('en'));
+  assert.equal(socialImage, getSocialImage('en'));
+  assert.equal(new Set(['en', 'de', 'es'].map(locale => getSocialImage(locale).alt)).size, 3, 'social image descriptions are localized');
+});
 
 test('SEO tags use canonical language URLs, reciprocal alternates and factual app identity', () => {
   for (const locale of ['en', 'de', 'es']) {
@@ -20,8 +61,19 @@ test('SEO tags use canonical language URLs, reciprocal alternates and factual ap
     assert.equal((html.match(/name="apple-itunes-app"/g) || []).length, 1);
     assert.ok(html.includes('app-id=6749182326'));
     assert.ok(html.includes('og:image:width" content="1200'));
+    const social = getSocialImage(locale);
+    const socialUrl = `https://example.org${social.src}`;
+    assert.equal(seo.image, socialUrl);
+    assert.ok(html.includes(`property="og:image" content="${socialUrl}"`), `${locale}: localized Open Graph image`);
+    assert.ok(html.includes(`name="twitter:image" content="${socialUrl}"`), `${locale}: localized Twitter image`);
+    assert.ok(html.includes(`property="og:image:alt" content="${escapeHtml(social.alt)}"`), `${locale}: localized Open Graph description`);
+    assert.ok(html.includes(`name="twitter:image:alt" content="${escapeHtml(social.alt)}"`), `${locale}: localized Twitter description`);
     const graph = seo.structuredData['@graph'];
-    assert.equal(graph.find(item => item['@type'] === 'MobileApplication').name, 'echo music');
+    const app = graph.find(item => item['@type'] === 'MobileApplication');
+    assert.equal(app.name, 'echo music');
+    assert.equal(app.image, socialUrl, `${locale}: matching JSON-LD share image`);
+    assert.deepEqual([...app.screenshot].sort(), screenshotNames.map(name => `https://example.org${getScreenshotImage(name, locale).src}`).sort(), `${locale}: JSON-LD screenshots match the selected language`);
+    assert.equal(graph.find(item => item['@type'] === 'WebPage').inLanguage, locale);
     assert.equal(graph.find(item => item['@type'] === 'Organization').email, 'info@anlumith.com');
     assert.equal(graph.find(item => item['@type'] === 'WebSite').name, 'echo music');
     assert.ok(seo.title.includes('echo music'));
@@ -60,18 +112,18 @@ test('production renderer emits complete localized content without browser globa
       const home = render(`/${locale}`, locale);
       assert.ok(home.includes(strings.productSummary));
       assert.ok(home.includes(strings.diaryTitle) && home.includes(strings.discoveryTitle) && home.includes(strings.ecosystemBody), `${locale}: diary, discovery and supported listening options`);
-      assert.ok(home.includes('/echo/diary-original-600.webp') && home.includes('/echo/diary-original.png'), `${locale}: genuine diary screenshot and original`);
+      assertLocalizedScreenshots(home, locale);
       assert.ok(home.split(strings.organicGrowth).length - 1 >= 3, `${locale}: organic growth is repeated in key home sections`);
       assert.ok(home.includes(strings.organicSource), `${locale}: owner provenance remains available`);
       assert.ok(home.includes(strings.faqTitle));
       assert.ok(home.includes(strings.faqs[0].question));
       assert.ok(home.includes('srcSet=') && home.includes('.webp'));
-      assert.ok(home.includes('/echo/map-americas.png'));
       assert.ok(home.includes(`href="/${locale}/investors"`));
       assert.equal((home.match(/<h1\b/g) || []).length, 1);
       const brief = render(`/${locale}/investors`, locale);
       assert.ok(brief.includes(strings.investorPosition));
-      assert.ok(brief.includes(strings.diaryTitle) && brief.includes('/echo/diary-original-600.webp'), `${locale}: investor product evidence`);
+      assert.ok(brief.includes(strings.diaryTitle), `${locale}: investor product evidence`);
+      assertLocalizedScreenshots(brief, locale, ['diary-original']);
       assert.ok(brief.split(strings.organicGrowth).length - 1 >= 3, `${locale}: investor introduction, evidence and contact repeat the organic message`);
       assert.ok(brief.includes(strings.organicSource), `${locale}: investor provenance`);
       assert.ok(brief.includes(strings.founderTitle));

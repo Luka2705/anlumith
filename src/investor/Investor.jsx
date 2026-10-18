@@ -5,7 +5,7 @@ import i18n, { detectLocale, formatNumber, locales } from './i18n.js';
 import { historicalSnapshot, HOUR, METRICS, PERIODS, snapshotState, validateSnapshot } from './metrics.js';
 import { company, musicBrand } from '../site.js';
 import { updateSeo } from './seo.js';
-import { screenshotImages } from './image-assets.js';
+import { getScreenshotImage } from './image-assets.js';
 import CommunityWorldMap from './CommunityWorldMap.jsx';
 import './investor-proof.css';
 import './music-diary.css';
@@ -18,13 +18,13 @@ function OrganicGrowth({ t }) {
   return <p className="organic-growth"><Sprout size={16} aria-hidden="true" /><span>{t('organicGrowth')}</span></p>;
 }
 
-function Screenshot({ name, alt, priority = false, sizes = '(max-width: 600px) 44vw, 280px' }) {
-  const image = screenshotImages[name];
+function Screenshot({ name, locale, alt, priority = false, sizes = '(max-width: 600px) 44vw, 280px' }) {
+  const image = getScreenshotImage(name, locale);
   return <img src={image.src} srcSet={image.srcSet} sizes={sizes} alt={alt} width={image.width} height={image.height}
     loading={priority ? 'eager' : 'lazy'} fetchPriority={priority ? 'high' : undefined} decoding="async" />;
 }
 
-function DiaryProduct({ t, embedded = false }) {
+function DiaryProduct({ t, locale, embedded = false }) {
   return <section id="product" className={`music-diary${embedded ? ' music-diary--embedded' : ' section-space'}`} aria-labelledby="diary-title">
     <div className={`music-diary-layout${embedded ? '' : ' echo-wrap'}`}>
       <div className="music-diary-content"><p className="echo-eyebrow">{t(embedded ? 'diaryEyebrow' : 'productEyebrow')}</p><h2 id="diary-title" className="display-heading">{t('diaryTitle')}</h2><p className="section-body">{t('diaryBody')}</p>
@@ -35,7 +35,7 @@ function DiaryProduct({ t, embedded = false }) {
         ].map(({ icon: Icon, title, body }) => <article key={title}><Icon size={19} aria-hidden="true" /><div><h3>{t(title)}</h3><p>{t(body)}</p></div></article>)}</div>
         <div className="store-links"><a href={appStore}>{t('ios')}<ArrowUpRight size={16} /></a><a href={playStore}>{t('android')}<ArrowUpRight size={16} /></a></div>
       </div>
-      <figure className="music-diary-visual"><a href={screenshotImages['diary-original'].original} target="_blank" rel="noreferrer" aria-label={t('diaryOriginal')}><Screenshot name="diary-original" alt={t('diaryVisual')} sizes="(max-width: 600px) 240px, 280px" /></a><figcaption><span>{t('diaryCaption')}</span><a href={screenshotImages['diary-original'].original} target="_blank" rel="noreferrer">{t('diaryOriginal')}<ArrowUpRight size={12} /></a></figcaption></figure>
+      <figure className="music-diary-visual"><a href={getScreenshotImage('diary-original', locale).original} target="_blank" rel="noreferrer" aria-label={t('diaryOriginal')}><Screenshot name="diary-original" locale={locale} alt={t('diaryVisual')} sizes="(max-width: 600px) 240px, 280px" /></a><figcaption><span>{t('diaryCaption')}</span><a href={getScreenshotImage('diary-original', locale).original} target="_blank" rel="noreferrer">{t('diaryOriginal')}<ArrowUpRight size={12} /></a></figcaption></figure>
     </div>
   </section>;
 }
@@ -50,7 +50,7 @@ function InvestorBrief({ data, status, t, locale, n }) {
       <dl className="brief-numbers">{['newUsers', 'contributors', 'sharedSongs'].map(key => <div key={key}><dt>{t(key)}</dt><dd>{n(data.periods['3m'][key])}</dd><small>{t('proofPeriod')}</small></div>)}</dl>
       <p className="section-body">{t(data.source === 'firebase' ? 'liveContributorDef' : 'contributorDef')}</p><details className="organic-source"><summary>{t('definitions')}</summary><p>{t('organicSource')}</p></details><a className="text-link" href={`/${locale}#traction`}>{t('definitions')}<ArrowUpRight size={17} /></a>
     </section>
-    <DiaryProduct t={t} embedded />
+    <DiaryProduct t={t} locale={locale} embedded />
     <CommunityWorldMap locale={locale} t={t} embedded />
     <section className="brief-story"><div><h2>{t('investorOpportunity')}</h2><p>{t('investorOpportunityBody')}</p><a className="text-link" href={`/${locale}#world-map`}>{t('mapNav')}<ArrowUpRight size={17} /></a></div><div><h2>{t('founderTitle')}</h2><p>{t('founderBody')}</p><a className="text-link" href={mail(t)}>{t('founder')}<ArrowUpRight size={17} /></a></div></section>
     <section id="contact" className="brief-contact"><div><p className="echo-eyebrow">{t('contactEyebrow')}</p><h2>{t('investorDiligence')}</h2><OrganicGrowth t={t} /><p className="section-body">{t('organicContact')}</p><p className="section-body">{t('investorDiligenceBody')}</p><a className="text-link" href={mail(t)}>{company.email}<ArrowUpRight size={17} /></a></div><ContactForm t={t} locale={locale} /></section>
@@ -202,17 +202,17 @@ export default function Investor({ initialLocale, initialPath } = {}) {
     </div></header>
     {!found ? <main id="echo-content" className="echo-wrap echo-legal"><h1>{t('notFound')}</h1><a href={`/${locale}`}>{t('back')}</a></main> : legalPage ? <LegalPage page={subpage} t={t} locale={locale} /> : investorPage ? <InvestorBrief data={data} status={status} t={t} locale={locale} n={n} /> : <main id="echo-content">
       <section className="echo-hero echo-wrap" aria-labelledby="echo-hero-title"><div className="hero-copy"><p className="echo-eyebrow"><span className="tiny-dot" />{t('investor')}</p><h1 id="echo-hero-title">{t('hero1')}<br /><em>{t('hero2')}</em></h1><p className="hero-sub">{t('heroSub')}</p><p className="hero-category">{t('productSummary')}</p><p className="hero-joined"><span className="joined-line" />{t('joined', { count: n(data.totalUsers) })}</p><p className="hero-data-note">{t(metrics.state === 'historical' ? 'historicalShort' : metrics.state)}</p><OrganicGrowth t={t} /><div className="hero-actions"><a className="echo-button primary" href="#product">{t('explore')}<ArrowUpRight size={18} /></a><a className="echo-button ghost" href="#traction">{t('seeTraction')}<ArrowDown size={17} /></a></div></div>
-        <div className="hero-visual"><div className="visual-top"><span>{musicBrand.name}</span><Music2 size={19} /></div><div className="hero-phone original-screen"><Screenshot name="feed-original" alt={t('feedVisual')} priority sizes="240px" /></div><div className="visual-caption"><span>{t('heroNote')}</span><span>↗</span></div></div>
+        <div className="hero-visual"><div className="visual-top"><span>{musicBrand.name}</span><Music2 size={19} /></div><div className="hero-phone original-screen"><Screenshot name="feed-original" locale={locale} alt={t('feedVisual')} priority sizes="240px" /></div><div className="visual-caption"><span>{t('heroNote')}</span><span>↗</span></div></div>
         <div className="hero-bottom"><span>{t('built')}</span><a href="#moment">{t('scroll')}<ArrowDown size={15} /></a><span>iOS & Android</span></div>
       </section>
 
       <section id="moment" className="traction-moment"><div className="echo-wrap"><div className="moment-heading"><p className="echo-eyebrow">{t('actual')}</p><h2>{t('moment1')}<br /><span>{t('moment2')}</span></h2><p>{t('momentIntro')}</p></div><div className="moment-total"><strong className="number-reveal">{n(data.totalUsers)}</strong><div><span>{t('totalUsers')}</span><small>{t(metrics.state === 'historical' ? 'historicalShort' : metrics.state)}</small></div></div>
       <div className="moment-foot"><span>{t('organicGrowth')}</span><a href="#traction">{t('seeTraction')}<ArrowDown size={16} /></a></div></div></section>
 
-      <DiaryProduct t={t} />
+      <DiaryProduct t={t} locale={locale} />
 
       <CommunityWorldMap locale={locale} t={t} />
-      <details className="map-product-details"><summary className="echo-wrap">{t('geoAppScreenshots')}<Plus size={17} /></summary><div className="echo-wrap world-map-layout"><div className="world-map-copy"><p className="echo-eyebrow"><Globe2 size={16} />{t('mapEyebrow')}</p><h2 id="world-map-title" className="display-heading">{t('mapTitle')}</h2><p className="section-body">{t('mapBody')}</p><p className="section-body">{t('mapDetail')}</p><a className="text-link" href={appStore}>{t('mapApp')}<ArrowUpRight size={18} /></a><p className="map-image-note">{t('mapImageNote')}</p></div><div className="world-map-gallery">{[{ source: 'map-americas', caption: 'mapAmericas', alt: 'mapVisualAmericas' }, { source: 'map-asia', caption: 'mapAsia', alt: 'mapVisualAsia' }].map(image => <figure key={image.source}><a className="map-original-link" href={`/echo/${image.source}.png`} target="_blank" rel="noreferrer" aria-label={`${t('openOriginal')} — ${t(image.caption)}`}><Screenshot name={image.source} alt={t(image.alt)} /></a><figcaption><span>{t(image.caption)}</span><a href={`/echo/${image.source}.png`} target="_blank" rel="noreferrer">{t('openOriginal')}<ArrowUpRight size={13} /></a></figcaption></figure>)}</div></div></details>
+      <details className="map-product-details"><summary className="echo-wrap">{t('geoAppScreenshots')}<Plus size={17} /></summary><div className="echo-wrap world-map-layout"><div className="world-map-copy"><p className="echo-eyebrow"><Globe2 size={16} />{t('mapEyebrow')}</p><h2 id="world-map-title" className="display-heading">{t('mapTitle')}</h2><p className="section-body">{t('mapBody')}</p><p className="section-body">{t('mapDetail')}</p><a className="text-link" href={appStore}>{t('mapApp')}<ArrowUpRight size={18} /></a><p className="map-image-note">{t('mapImageNote')}</p></div><div className="world-map-gallery">{[{ source: 'map-americas', caption: 'mapAmericas', alt: 'mapVisualAmericas' }, { source: 'map-asia', caption: 'mapAsia', alt: 'mapVisualAsia' }].map(image => <figure key={image.source}><a className="map-original-link" href={getScreenshotImage(image.source, locale).original} target="_blank" rel="noreferrer" aria-label={`${t('openOriginal')} — ${t(image.caption)}`}><Screenshot name={image.source} locale={locale} alt={t(image.alt)} /></a><figcaption><span>{t(image.caption)}</span><a href={getScreenshotImage(image.source, locale).original} target="_blank" rel="noreferrer">{t('openOriginal')}<ArrowUpRight size={13} /></a></figcaption></figure>)}</div></div></details>
 
       <section id="traction" className="investor-proof section-space" aria-labelledby="proof-title"><div className="echo-wrap">
         <div className="section-top"><div><p className="echo-eyebrow">{t('proofEyebrow')}</p><h2 id="proof-title" className="display-heading">{t('proofTitle')}</h2><p className="section-body">{t('proofIntro')}</p></div><a className="text-link" href="#contact">{t('deck')}<ArrowUpRight size={18} /></a></div>

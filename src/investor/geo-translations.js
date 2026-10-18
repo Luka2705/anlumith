@@ -32,7 +32,7 @@ export const geoEn = {
   geoRefresh: 'Refresh map',
   geoRegionList: 'View all regions and post counts',
   geoRegion: 'Region centre',
-  geoAppScreenshots: 'Explore the map in the app · original screenshots',
+  geoAppScreenshots: 'App map · product screenshots with English text',
 };
 
 export const geoDe = {
@@ -69,7 +69,7 @@ export const geoDe = {
   geoRefresh: 'Karte aktualisieren',
   geoRegionList: 'Alle Regionen und Beitragszahlen ansehen',
   geoRegion: 'Regionsmittelpunkt',
-  geoAppScreenshots: 'Die Karte in der App entdecken · Originalbilder',
+  geoAppScreenshots: 'Die Karte in der App · Produktbilder mit deutschen Texten',
 };
 
 export const geoEs = {
@@ -106,5 +106,5 @@ export const geoEs = {
   geoRefresh: 'Actualizar mapa',
   geoRegionList: 'Ver todas las regiones y sus publicaciones',
   geoRegion: 'Centro de la región',
-  geoAppScreenshots: 'Descubre el mapa en la app · capturas originales',
+  geoAppScreenshots: 'El mapa en la app · imágenes con textos en español',
 };

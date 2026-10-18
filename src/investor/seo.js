@@ -1,6 +1,6 @@
 import site, { isDraft } from '../site.js';
 import { en, de, es } from './translations.js';
-import { socialImage } from './image-assets.js';
+import { getScreenshotImage, getSocialImage } from './image-assets.js';
 
 export const LANGUAGES = ['en', 'de', 'es'];
 export const APP_STORE = 'https://apps.apple.com/app/echo-music/id6749182326';
@@ -22,6 +22,7 @@ export function pageSeo({ pathname = '/', locale = 'en', domain = site.domain, d
   const canonical = root && known ? new URL(canonicalPath, root).href : null;
   const alternates = root && known ? [...LANGUAGES, 'x-default'].map(language => ({ language,
     href: new URL(`/${language === 'x-default' ? 'en' : language}${page ? '/' + page : ''}`, root).href })) : [];
+  const socialImage = getSocialImage(locale);
   const image = root ? new URL(socialImage.src, root).href : null;
   const graph = root && known ? [
     { '@type': 'Organization', '@id': `${root}#organization`, name: 'ANLUMITH', url: new URL('/company/', root).href,
@@ -34,16 +35,17 @@ export function pageSeo({ pathname = '/', locale = 'en', domain = site.domain, d
     ...(!page || page === 'investors' ? [{ '@type': 'MobileApplication', '@id': `${root}#app`, name: 'echo music',
       description: strings.productSummary, operatingSystem: 'iOS, Android', applicationCategory: 'SocialNetworkingApplication',
       publisher: { '@id': `${root}#organization` }, creator: { '@id': `${root}#founder` },
-      image, screenshot: ['feed-original-600.webp', 'diary-original-600.webp', 'map-americas-600.webp', 'map-asia-600.webp'].map(file => new URL(`/echo/${file}`, root).href),
+      image, screenshot: ['feed-original', 'diary-original', 'map-americas', 'map-asia'].map(name => new URL(getScreenshotImage(name, locale).src, root).href),
       installUrl: [APP_STORE, PLAY_STORE], sameAs: [APP_STORE, PLAY_STORE] }] : []),
   ] : [];
-  return { title, description, canonical, alternates, image, locale, known,
+  return { title, description, canonical, alternates, image, imageAlt: socialImage.alt, locale, known,
     robots: draft || !known ? 'noindex, follow' : 'index, follow, max-image-preview:large',
     structuredData: graph.length ? { '@context': 'https://schema.org', '@graph': graph } : null };
 }
 
 export function seoTags(options) {
   const seo = pageSeo(options);
+  const socialImage = getSocialImage(seo.locale);
   const meta = (name, content, property = false) => `<meta ${property ? 'property' : 'name'}="${name}" content="${escapeHtml(content)}" data-echo-seo>`;
   return [`<title>${escapeHtml(seo.title)}</title>`, meta('description', seo.description), meta('robots', seo.robots),
     meta('apple-itunes-app', 'app-id=6749182326'),
@@ -53,7 +55,7 @@ export function seoTags(options) {
     meta('twitter:card', 'summary_large_image'), meta('twitter:title', seo.title), meta('twitter:description', seo.description),
     ...(seo.canonical ? [`<link rel="canonical" href="${escapeHtml(seo.canonical)}" data-echo-seo>`, meta('og:url', seo.canonical, true)] : []),
     ...seo.alternates.map(alternate => `<link rel="alternate" hreflang="${alternate.language}" href="${escapeHtml(alternate.href)}" data-echo-seo>`),
-    ...(seo.image ? [meta('og:image', seo.image, true), meta('og:image:width', socialImage.width, true), meta('og:image:height', socialImage.height, true), meta('og:image:alt', 'echo music — Social music discovery', true), meta('twitter:image', seo.image), meta('twitter:image:alt', 'echo music — Social music discovery')] : []),
+    ...(seo.image ? [meta('og:image', seo.image, true), meta('og:image:width', socialImage.width, true), meta('og:image:height', socialImage.height, true), meta('og:image:alt', seo.imageAlt, true), meta('twitter:image', seo.image), meta('twitter:image:alt', seo.imageAlt)] : []),
     ...(seo.structuredData ? [`<script type="application/ld+json" id="echo-structured-data" data-echo-seo>${safeJson(seo.structuredData)}</script>`] : []),
   ].join('\n');
 }
