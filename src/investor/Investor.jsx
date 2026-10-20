@@ -12,6 +12,7 @@ import './investor-proof.css';
 import './music-diary.css';
 import './hero-collage.css';
 import './industry-opportunity.css';
+import './investment-thesis.css';
 
 const appStore = 'https://apps.apple.com/de/app/echo-music/id6749182326';
 const playStore = 'https://play.google.com/store/apps/details?id=com.anlumith.echo';
@@ -64,15 +65,21 @@ function IndustryOpportunity({ t, locale, detailed = false }) {
 
 function InvestorBrief({ data, status, t, locale, n }) {
   return <main id="echo-content" className="echo-wrap investor-brief section-space">
-    <p className="echo-eyebrow">{t('investorBrief')}</p><h1 className="display-heading">{t('investorPageTitle')}</h1>
+    <header className="investment-hero"><p className="echo-eyebrow"><span className="tiny-dot" />{t('investorBrief')} / echo music</p><h1 className="display-heading">{t('investorPageTitle')}</h1>
     <p className="investor-position">{t('investorPosition')}</p><p className="section-body">{t('investorIntro')}</p>
     <OrganicGrowth t={t} />
     <div className="hero-actions"><a className="echo-button primary" href="#contact">{t('deck')}<ArrowUpRight size={18} /></a><a className="text-link" href={`/${locale}#product`}>{t('explore')}<ArrowUpRight size={18} /></a></div>
+    </header>
+    <section className="human-thesis" aria-labelledby="human-thesis-title">
+      <div><p className="echo-eyebrow">{t('thesisLabel')}</p><h2 id="human-thesis-title">{t('thesisQuote')}</h2></div>
+      <div className="human-thesis-detail"><p>{t('thesisBody')}</p><ol>{t('thesisLoop', { returnObjects: true }).map((step, index) => <li key={step}><span aria-hidden="true">0{index + 1}</span>{step}</li>)}</ol></div>
+    </section>
     <section className="brief-traction" aria-labelledby="brief-traction-title"><h2 id="brief-traction-title">{t('proofTitle')}</h2><OrganicGrowth t={t} />{status}
       <dl className="brief-numbers">{['newUsers', 'contributors', 'sharedSongs'].map(key => <div key={key}><dt>{t(key)}</dt><dd>{n(data.periods['3m'][key])}</dd><small>{t('proofPeriod')}</small></div>)}</dl>
       <p className="section-body">{t(data.source === 'firebase' ? 'liveContributorDef' : 'contributorDef')}</p><details className="organic-source"><summary>{t('definitions')}</summary><p>{t('organicSource')}</p></details><a className="text-link" href={`/${locale}#traction`}>{t('definitions')}<ArrowUpRight size={17} /></a>
     </section>
     <IndustryOpportunity t={t} locale={locale} detailed />
+    <section className="investment-questions" aria-labelledby="investment-questions-title"><div><p className="echo-eyebrow">{t('objectionsEyebrow')}</p><h2 id="investment-questions-title" className="display-heading">{t('objectionsTitle')}</h2></div><div className="investment-answers">{t('objections', { returnObjects: true }).map((item, index) => <details key={item.question} open={index === 0}><summary>{item.question}<Plus size={18} aria-hidden="true" /></summary><p>{item.answer}</p></details>)}</div></section>
     <DiaryProduct t={t} locale={locale} embedded />
     <CommunityWorldMap locale={locale} t={t} embedded />
     <section className="brief-story"><div><h2>{t('founderTitle')}</h2><p>{t('founderBody')}</p><a className="text-link" href={mail(t)}>{t('founder')}<ArrowUpRight size={17} /></a></div></section>
