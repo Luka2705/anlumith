@@ -36,7 +36,8 @@ test('localized investor summaries, compact map, legal routes and locale prefere
       await i18n.changeLanguage(locale);
       const markup = renderToStaticMarkup(createElement(Investor));
       assert.ok(markup.includes(translation.hero1), locale);
-      for (const name of ['feed-original', 'diary-original', 'map-americas', 'map-asia']) {
+      assert.ok(markup.includes('src="/echo/hero-devices-v3-1000.webp"') && markup.includes(translation.heroVisual), `${locale}: product hero with localized description`);
+      for (const name of ['diary-original', 'map-americas', 'map-asia']) {
         const image = [...markup.matchAll(/<img\b[^>]*>/g)].map(match => match[0]).find(tag => tag.includes(`src="/echo/localized/${locale}/${name}-600.webp"`));
         assert.ok(image, `${locale}/${name}: selected language screenshot`);
         for (const width of [360, 600, 900]) assert.ok(image.includes(`/echo/localized/${locale}/${name}-${width}.webp ${width}w`), `${locale}/${name}: ${width}px responsive image`);

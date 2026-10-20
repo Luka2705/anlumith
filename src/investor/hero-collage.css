@@ -1,0 +1,5 @@
+/* One complete product composition: no viewport-dependent clipping or overlaps. */
+.hero-visual.hero-collage{margin:0;height:auto;min-height:0;align-self:center;background:#141414;color:#c6c0b6;border-radius:16px;overflow:hidden}
+.hero-collage .hero-product-image{display:block;width:100%;height:auto;aspect-ratio:1122 / 1402;object-fit:contain}
+.hero-collage .visual-caption{position:relative;inset:auto;background:#141414;border:0;padding:14px 18px 17px;min-height:0;display:block;text-align:center;font-size:11px;line-height:1.6}
+@media(max-width:850px){.hero-collage .visual-caption{font-size:10px}}

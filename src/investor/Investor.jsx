@@ -1,14 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ArrowUpRight, ArrowDown, ArrowLeftRight, CalendarDays, Compass, Check, Plus, Music2, Globe2, RefreshCw, Sprout } from 'lucide-react';
+import { ArrowUpRight, ArrowDown, ArrowLeftRight, CalendarDays, Compass, Plus, Globe2, RefreshCw, Sprout } from 'lucide-react';
 import i18n, { detectLocale, formatNumber, locales } from './i18n.js';
 import { historicalSnapshot, HOUR, METRICS, PERIODS, snapshotState, validateSnapshot } from './metrics.js';
 import { company, musicBrand } from '../site.js';
 import { updateSeo } from './seo.js';
 import { getScreenshotImage } from './image-assets.js';
 import CommunityWorldMap from './CommunityWorldMap.jsx';
+import { buildInquiryMailto } from './contact-schema.js';
 import './investor-proof.css';
 import './music-diary.css';
+import './hero-collage.css';
 import './industry-opportunity.css';
 
 const appStore = 'https://apps.apple.com/de/app/echo-music/id6749182326';
@@ -115,38 +117,32 @@ function Definition({ metric, data, t }) {
 }
 
 function ContactForm({ t, locale }) {
-  const [state, setState] = useState('idle');
+  const [opened, setOpened] = useState(false);
   const [error, setError] = useState('');
-  const pending = useRef(false);
-  const started = useRef(Date.now());
-  async function submit(event) {
+  function submit(event) {
     event.preventDefault();
-    if (pending.current) return;
     const form = event.currentTarget;
     const values = Object.fromEntries(new FormData(form));
-    if (!form.checkValidity() || !values.name.trim() || !values.consent) { setError('validation'); return; }
-    pending.current = true; setState('submitting'); setError('');
+    if (!form.checkValidity() || !values.name.trim() || !values.consent) { setError('validation'); setOpened(false); return; }
     try {
-      const response = await fetch('/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...values, locale, startedAt: started.current }), signal: AbortSignal.timeout(15000) });
-      if (!response.ok) { setError(response.status === 503 ? 'formUnavailable' : 'formError'); setState('idle'); return; }
-      const result = await response.json();
-      if (result.ok !== true) throw new Error('Delivery not confirmed');
-      setState('success'); form.reset();
-    } catch { setError('formError'); setState('idle'); }
-    finally { pending.current = false; }
+      const href = buildInquiryMailto({ ...values, locale }, {
+        subject: `${musicBrand.name} — ${t('deck')}`,
+        ...Object.fromEntries(['name', 'email', 'organization', 'message', 'consent'].map(key => [key, t(key)])),
+      });
+      window.location.href = href;
+      setError(''); setOpened(true);
+    } catch { setError('validation'); setOpened(false); }
   }
   return <form className="investor-form" onSubmit={submit} aria-label={t('formLabel')} noValidate>
-    {state === 'success' ? <div className="form-success" role="status"><Check size={32} /><p>{t('success')}</p></div> : <>
       <div className="form-row"><label>{t('name')}<input name="name" autoComplete="name" required maxLength={120} /></label><label>{t('email')}<input name="email" type="email" autoComplete="email" required maxLength={254} /></label></div>
       <label>{t('organization')} <span>({t('optional')})</span><input name="organization" autoComplete="organization" maxLength={160} /></label>
       <label>{t('message')} <span>({t('optional')})</span><textarea name="message" rows="3" maxLength={3000} /></label>
       <div className="honey" aria-hidden="true"><label>Website<input name="website" tabIndex="-1" autoComplete="off" /></label></div>
       <label className="consent"><input type="checkbox" name="consent" required /><span>{t('consent')} <a href={`/${locale}/privacy`}>{t('privacy')} ↗</a></span></label>
       {error && <p className="form-error" role="alert">{t(error)} <a href={mail(t)}>{t('directEmail')} ↗</a></p>}
-      <button className="echo-button primary" type="submit" disabled={state === 'submitting'}>{t(state === 'submitting' ? 'submitting' : 'submit')}<ArrowUpRight size={18} /></button>
-      <p className="form-privacy">{t('privacyNote')}</p>
-    </>}
+      <button className="echo-button primary" type="submit">{t('submit')}<ArrowUpRight size={18} /></button>
+      {opened && <p className="form-privacy" role="status">{t('emailDraftOpened')}</p>}
+      <p className="form-privacy">{t('emailDraftNote')} {t('privacyNote')}</p>
   </form>;
 }
 
@@ -223,7 +219,10 @@ export default function Investor({ initialLocale, initialPath } = {}) {
     </div></header>
     {!found ? <main id="echo-content" className="echo-wrap echo-legal"><h1>{t('notFound')}</h1><a href={`/${locale}`}>{t('back')}</a></main> : legalPage ? <LegalPage page={subpage} t={t} locale={locale} /> : investorPage ? <InvestorBrief data={data} status={status} t={t} locale={locale} n={n} /> : <main id="echo-content">
       <section className="echo-hero echo-wrap" aria-labelledby="echo-hero-title"><div className="hero-copy"><p className="echo-eyebrow"><span className="tiny-dot" />{t('investor')}</p><h1 id="echo-hero-title">{t('hero1')}<br /><em>{t('hero2')}</em></h1><p className="hero-sub">{t('heroSub')}</p><p className="hero-category">{t('productSummary')}</p><p className="hero-joined"><span className="joined-line" />{t('joined', { count: n(data.totalUsers) })}</p><p className="hero-data-note">{t(metrics.state === 'historical' ? 'historicalShort' : metrics.state)}</p><OrganicGrowth t={t} /><div className="hero-actions"><a className="echo-button primary" href="#product">{t('explore')}<ArrowUpRight size={18} /></a><a className="echo-button ghost" href="#traction">{t('seeTraction')}<ArrowDown size={17} /></a></div></div>
-        <div className="hero-visual"><div className="visual-top"><span>{musicBrand.name}</span><Music2 size={19} /></div><div className="hero-phone original-screen"><Screenshot name="feed-original" locale={locale} alt={t('feedVisual')} priority sizes="240px" /></div><div className="visual-caption"><span>{t('heroNote')}</span><span>↗</span></div></div>
+        <figure className="hero-visual hero-collage">
+          <img className="hero-product-image" src="/echo/hero-devices-v3-1000.webp" srcSet="/echo/hero-devices-v3-600.webp 600w, /echo/hero-devices-v3-1000.webp 1000w, /echo/hero-devices-v3-1122.webp 1122w" sizes="(max-width: 600px) calc(100vw - 40px), (max-width: 1550px) 43vw, 560px" width="1122" height="1402" alt={t('heroVisual')} loading="eager" fetchPriority="high" decoding="async" />
+          <figcaption className="visual-caption">{t('heroNote')}</figcaption>
+        </figure>
         <div className="hero-bottom"><span>{t('built')}</span><a href="#moment">{t('scroll')}<ArrowDown size={15} /></a><span>iOS & Android</span></div>
       </section>
 

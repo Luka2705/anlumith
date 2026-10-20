@@ -12,3 +12,18 @@ export function validateInquiry(input) {
       !['en', 'de', 'es'].includes(input.locale) || !['on', true].includes(input.consent)) throw new Error('Invalid inquiry');
   return { name, email, organization: string('organization', 160), message: string('message', 3000), locale: input.locale, consent: true };
 }
+
+export function buildInquiryMailto(input, labels) {
+  const inquiry = validateInquiry(input);
+  const body = [
+    `${labels.name}: ${inquiry.name}`,
+    `${labels.email}: ${inquiry.email}`,
+    `${labels.organization}: ${inquiry.organization}`,
+    '',
+    `${labels.message}:`,
+    inquiry.message,
+    '',
+    labels.consent,
+  ].join('\r\n');
+  return `mailto:info@anlumith.com?subject=${encodeURIComponent(labels.subject)}&body=${encodeURIComponent(body)}`;
+}

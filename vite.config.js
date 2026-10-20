@@ -14,6 +14,7 @@ export default defineConfig(({ mode, isPreview }) => {
   const env = {
     ECHO_METRICS_URL: process.env.ECHO_METRICS_URL || fromFile.ECHO_METRICS_URL,
     ECHO_GEOGRAPHY_URL: process.env.ECHO_GEOGRAPHY_URL || fromFile.ECHO_GEOGRAPHY_URL,
+    ECHO_CONTACT_URL: process.env.ECHO_CONTACT_URL || fromFile.ECHO_CONTACT_URL,
     ECHO_API_TOKEN: process.env.ECHO_API_TOKEN || fromFile.ECHO_API_TOKEN,
   };
   let building = false;

@@ -115,7 +115,8 @@ test('production renderer emits complete localized content without browser globa
       for (const useCase of strings.industryCases) assert.ok(home.includes(escapeHtml(useCase.title)), `${locale}: concrete label use case`);
       assert.ok(home.includes(`href="/${locale}/investors#opportunity"`), `${locale}: detailed investment case`);
       assert.ok(home.includes(strings.diaryTitle) && home.includes(strings.discoveryTitle) && home.includes(strings.ecosystemBody), `${locale}: diary, discovery and supported listening options`);
-      assertLocalizedScreenshots(home, locale);
+      assertLocalizedScreenshots(home, locale, ['diary-original', 'map-americas', 'map-asia']);
+      assert.ok(home.includes('src="/echo/hero-devices-v3-1000.webp"') && home.includes(escapeHtml(strings.heroVisual)), `${locale}: complete product composition with localized description`);
       assert.ok(home.split(strings.organicGrowth).length - 1 >= 3, `${locale}: organic growth is repeated in key home sections`);
       assert.ok(home.includes(strings.organicSource), `${locale}: owner provenance remains available`);
       assert.ok(home.includes(strings.faqTitle));

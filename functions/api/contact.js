@@ -1,7 +1,7 @@
 import { validateInquiry } from '../../src/investor/contact-schema.js';
 import { backendUrl, json } from '../../server/http.js';
 
-export async function handleContact({ request, env }, fetcher = fetch) {
+export async function handleContact({ request, env }, fetcher = fetch, deliver) {
   const origin = new URL(request.url).origin;
   if (request.headers.get('Origin') !== origin || request.headers.get('Sec-Fetch-Site') === 'cross-site') return json({ error: 'forbidden' }, 403);
   if (!request.headers.get('Content-Type')?.startsWith('application/json')) return json({ error: 'invalid_content_type' }, 415);
@@ -19,6 +19,10 @@ export async function handleContact({ request, env }, fetcher = fetch) {
   if (input?.website) return json({ error: 'invalid_inquiry' }, 400);
   let inquiry;
   try { inquiry = validateInquiry(input); } catch { return json({ error: 'invalid_inquiry' }, 400); }
+  if (deliver) {
+    try { await deliver(inquiry); return json({ ok: true }); }
+    catch { return json({ error: 'delivery_failed' }, 503); }
+  }
   if (!env.ECHO_CONTACT_URL || !env.ECHO_API_TOKEN) return json({ error: 'not_configured' }, 503);
   try {
     const response = await fetcher(backendUrl(env.ECHO_CONTACT_URL), { method: 'POST',

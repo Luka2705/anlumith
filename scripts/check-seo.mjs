@@ -19,8 +19,12 @@ for (const route of investorRoutes) {
   assert.ok(!html.includes('<div id="root"></div>'), `${route}: empty shell`);
   assert.equal((html.match(/<h1\b/g) || []).length, 1, `${route}: single h1`);
   assert.equal((html.match(/name="apple-itunes-app"/g) || []).length, 1, `${route}: smart banner`);
-  if (home) assert.ok(html.includes({ en, de, es }[locale].productSummary), `${route}: visible product positioning`);
-  for (const name of home ? screenshotNames : investor ? ['diary-original'] : []) {
+  if (home) {
+    assert.ok(html.includes({ en, de, es }[locale].productSummary), `${route}: visible product positioning`);
+    assert.ok(html.includes('src="/echo/hero-devices-v3-1000.webp"') && html.includes(escapeHtml({ en, de, es }[locale].heroVisual)), `${route}: complete product hero`);
+    for (const width of [600, 1000, 1122]) assert.ok((await stat(`dist/echo/hero-devices-v3-${width}.webp`)).size > 0, `${route}: responsive hero asset`);
+  }
+  for (const name of home ? screenshotNames.filter(name => name !== 'feed-original') : investor ? ['diary-original'] : []) {
     const image = getScreenshotImage(name, locale);
     const imageTag = [...html.matchAll(/<img\b[^>]*>/g)].map(match => match[0]).find(tag => tag.includes(`src="${image.src}"`));
     assert.ok(imageTag, `${route}/${name}: localized screenshot`);

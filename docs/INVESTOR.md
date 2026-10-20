@@ -51,7 +51,7 @@ No deployment has been performed. `npm run dev` and `vite preview` now include a
 
 Local prerequisites: install the Firebase CLI through its official distribution, sign in using `firebase login`, and run the development server with network access. The active CLI account needs access to the configured Firestore project. `server/investor.config.json` makes the production project selection explicit; it does not contain secrets. If `ECHO_METRICS_URL` and `ECHO_API_TOKEN` are configured as server environment variables (or in an ignored `.env.local`), the local middleware uses the hosted adapter instead. Set `localMetricsSource` to a value other than `firebase-cli` to disable direct local reads.
 
-The local connection is distinct from Cloudflare Pages Functions and is not deployed by the Vite static build. Online form delivery remains unconfigured locally; all email CTAs open a request to info@anlumith.com. Form success is shown only after a backend confirms delivery; no deck is made public.
+The local connection is distinct from Cloudflare Pages Functions and is not deployed by the Vite static build. The investor form now opens a `mailto:` draft to the fixed recipient `info@anlumith.com`, containing the name, email, organization, message and privacy acknowledgment with localized labels. It validates the required fields, retains the entries, and explains that the visitor must send the draft in their email app; it does not claim successful delivery or call `/api/contact`. Existing server-side contact endpoints remain available for integrations but are not used by this form. Direct email links also open the email application; no deck is made public.
 
 ### Stage the Firebase companion
 
@@ -163,3 +163,8 @@ The revised compact map, fresh-data live label and combined three-figure investo
 Only claim live metrics or functioning hosted email delivery where their runtime integration is verified. The organic-growth/€0-advertising statement is owner-confirmed, not an independently audited acquisition channel mix. Do not infer retention, virality, zero acquisition costs or numerical projections from it.
 
 The diary layout and German feature copy were visually checked in desktop Safari against the running local site on October 18, 2026. The complete screenshot and its calendar remain visible, with a link to the matching full-size localized image. The new diary asset, feature text and investor-page reuse are covered by the existing localized SSR/SEO checks.
+
+
+### Local contact verification — October 19, 2026
+
+The restarted local Vite server accepted a clearly labeled technical test inquiry through `POST /api/contact` and returned HTTP 200 with `{ "ok": true }` after Gmail SMTP accepted the message for `info@anlumith.com`. SMTP authentication was also verified separately. This confirms local submission and SMTP acceptance; inbox placement and hosted delivery were not verified. The owner requested form email delivery. All 23 automated tests and the production build pass. The earlier statements about no real email testing describe the prior implementation.

@@ -1,4 +1,5 @@
 {
   "localMetricsSource": "firebase-cli",
+  "localContactSource": "firebase-cli",
   "firebaseProjectId": "echo-ee3bf"
 }
