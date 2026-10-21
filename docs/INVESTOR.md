@@ -80,6 +80,17 @@ The contact endpoint revalidates all fields, sends plain text through the existi
 
 ### Connect Cloudflare Pages Functions
 
+**Hosting diagnosis, October 21, 2026:** anlumith.com is deployed as a
+Cloudflare Worker with static assets, not a Pages application. Its static-only
+deployment returns 404 for both data endpoints. For this existing Worker use
+the root `wrangler.jsonc` and `server/worker.js`: build the website, then deploy
+with `npx wrangler deploy` (or the connected Workers Build). The Worker reuses
+the validated handlers below and sends `/api/*` to code before asset handling.
+Keep the same server-only URL/token bindings listed below in the Worker's
+Variables and Secrets settings. Missing backend bindings return JSON 503 rather
+than a static 404. This routing fix does not deploy the Firebase companion or
+provide its credentials. The Pages instructions below are an alternative.
+
 Keep the existing Cloudflare Pages deployment with build `npm run build:production`, output `dist`, and the root `functions/` directory included. Configure **server environment bindings/secrets**, never `VITE_*`:
 
 | Binding | Value |

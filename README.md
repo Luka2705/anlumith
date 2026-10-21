@@ -35,6 +35,17 @@ MyBasar verwendet das ShoppingBag-Icon aus Lucide. Weitere Produkte können in `
 
 ## Bauen und veröffentlichen
 
+**Aktuelles Hosting: Cloudflare Workers.** `wrangler.jsonc` verbindet `dist/` mit
+`server/worker.js`. Dieser Einstieg stellt `/api/geography`, `/api/metrics` und
+`/api/contact` bereit; das Verzeichnis `functions/` allein wird von Workers nicht
+ausgeführt. Nach dem Build mit `npx wrangler deploy` veröffentlichen. Die
+serverseitigen Bindings `ECHO_GEOGRAPHY_URL`, `ECHO_METRICS_URL` und
+`ECHO_API_TOKEN` müssen auf die bereitgestellten Firebase-Endpunkte zeigen
+(siehe [Investor-Anbindung](docs/INVESTOR.md#connect-cloudflare-pages-functions)).
+Ohne diese Bindings antworten die Daten-Endpunkte mit 503; echte Daten erfordern
+zusätzlich die Firebase-Bereitstellung. Der folgende Pages-Leitfaden beschreibt
+die ursprünglich geplante, alternative Hosting-Variante.
+
 ```sh
 npm run build
 ```
