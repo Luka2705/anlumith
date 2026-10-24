@@ -1,5 +1,13 @@
 # echo music investor website
 
+> Hosting update (2026-10-24, anlumith#1): the current runtime is Cloudflare
+> Workers. Public data routes use durable snapshots and request limits;
+> the hourly scheduled Firebase publisher replaces the visitor-triggered
+> upstream proxy. Follow [WEBSITE-SNAPSHOTS.md](WEBSITE-SNAPSHOTS.md) for the
+> authoritative current deployment path. Earlier local observations and
+> optional HTTP/Pages setup below are historical context.
+
+
 ## Scope and routes
 
 The existing React/Vite app is retained. echo music's investor presentation is at `/en`, `/de`, and `/es`. `/` resolves to a saved language, then a supported browser language, otherwise English. Language switching preserves the current page and section; browser back/forward is handled. Each locale has `/privacy`, `/imprint`, and `/cookies`. Vite prerenders full translated HTML for sixteen echo music routes (including the root and dedicated investor pages), plus the corporate pages and a static 404. It emits translated titles, descriptions and `lang` attributes, as well as configured-domain canonical/hreflang and social metadata. React updates metadata and configured-domain canonical/hreflang links. Unknown routes render a localized not-found screen.

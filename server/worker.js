@@ -2,6 +2,8 @@ import { onRequest as geography } from '../functions/api/geography.js';
 import { onRequest as metrics } from '../functions/api/metrics.js';
 import { onRequest as contact } from '../functions/api/contact.js';
 import { json } from './http.js';
+import { publishSnapshots } from './snapshots.js';
+export { WebsiteSnapshots } from './snapshots.js';
 
 const routes = new Map([
   ['/api/geography', geography],
@@ -12,6 +14,7 @@ const routes = new Map([
 export default {
   async fetch(request, env) {
     const path = new URL(request.url).pathname.replace(/\/$/, '');
+    if (path === '/api/internal/snapshots') return publishSnapshots(request, env);
     const handler = routes.get(path);
     if (handler) return handler({ request, env });
     if (path === '/api' || path.startsWith('/api/')) return json({ error: 'not_found' }, 404);

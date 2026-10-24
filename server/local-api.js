@@ -1,12 +1,21 @@
 import { readFirebaseMetrics } from './firebase-metrics.js';
-import { handleMetrics } from '../functions/api/metrics.js';
+import { validateSnapshot } from '../src/investor/metrics.js';
+import { backendUrl } from './http.js';
 import { readFirebaseGeography } from './firebase-geography.js';
-import { handleGeography } from '../functions/api/geography.js';
+import { validateGeography } from '../src/investor/geography.js';
 import { handleContact } from '../functions/api/contact.js';
 import { sendContactMail } from './contact-mail.js';
 import { Readable } from 'node:stream';
 
 export function createLocalApi({ configuration, env = {}, readMetrics = readFirebaseMetrics, readGeography = readFirebaseGeography, sendMail = sendContactMail, clock = Date.now }) {
+  // Retain the legacy hosted adapter only for loopback development. Public
+  // Worker requests never import or call this credential-bearing local path.
+  async function hostedSnapshot(url, validate) {
+    const response = await fetch(backendUrl(url), { headers: { Authorization: `Bearer ${env.ECHO_API_TOKEN}` },
+      signal: AbortSignal.timeout(20000), redirect: 'error' });
+    if (!response.ok || !response.headers.get('content-type')?.includes('application/json')) throw new Error('Unavailable');
+    return validate(await response.json());
+  }
   let contactHour, contactAttempts = 0;
   let cached, expiresAt = 0, pending;
   let cachedGeography, geographyExpiresAt = 0, pendingGeography;
@@ -68,14 +77,13 @@ export function createLocalApi({ configuration, env = {}, readMetrics = readFire
     try {
       if (isGeography) {
         if (env.ECHO_GEOGRAPHY_URL && env.ECHO_API_TOKEN) {
-          const upstream = await handleGeography({ env }); send(await upstream.json(), upstream.status);
+          send(await hostedSnapshot(env.ECHO_GEOGRAPHY_URL, validateGeography));
         } else if (configuration.localMetricsSource === 'firebase-cli') send(await geography());
         else send({ error: 'not_configured' }, 503);
         return;
       }
       if (env.ECHO_METRICS_URL && env.ECHO_API_TOKEN) {
-        const upstream = await handleMetrics({ env });
-        send(await upstream.json(), upstream.status);
+        send(await hostedSnapshot(env.ECHO_METRICS_URL, validateSnapshot));
       } else if (configuration.localMetricsSource === 'firebase-cli') {
         send(await metrics());
       } else send({ error: 'not_configured' }, 503);

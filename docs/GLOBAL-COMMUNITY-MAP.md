@@ -1,5 +1,13 @@
 # Global community map
 
+> Hosting update (2026-10-24, anlumith#1): the current runtime is Cloudflare
+> Workers. Public data routes use durable snapshots and request limits;
+> the hourly scheduled Firebase publisher replaces the visitor-triggered
+> upstream proxy. Follow [WEBSITE-SNAPSHOTS.md](WEBSITE-SNAPSHOTS.md) for the
+> authoritative current deployment path. Earlier local observations and
+> optional HTTP/Pages setup below are historical context.
+
+
 The home and investor pages show a compact world map of public song-sharing activity during a rolling 72-hour snapshot. The local server reads Firebase; a hosted adapter is prepared but not deployed. No example or random dots are substituted when data is unavailable.
 
 ## Public data contract

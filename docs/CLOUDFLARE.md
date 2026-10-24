@@ -1,5 +1,13 @@
 # GitHub → Cloudflare Pages → deine Domain
 
+> Hosting update (2026-10-24, anlumith#1): the current runtime is Cloudflare
+> Workers. Public data routes use durable snapshots and request limits;
+> the hourly scheduled Firebase publisher replaces the visitor-triggered
+> upstream proxy. Follow [WEBSITE-SNAPSHOTS.md](WEBSITE-SNAPSHOTS.md) for the
+> authoritative current deployment path. Earlier local observations and
+> optional HTTP/Pages setup below are historical context.
+
+
 Stand: 21. September 2026. Diese Anleitung gilt für dieses Repository. Cloudflare empfiehlt Workers grundsätzlich für neue Anwendungen; Pages unterstützt weiterhin das hier verwendete Hosting statischer Seiten mit Git-Anbindung. Die folgenden Einstellungen gehören zu **Pages**.
 
 ## 1. Website vorbereiten

@@ -68,11 +68,8 @@ test('query errors do not publish fake zero or partial points', async () => {
   const empty = await readFirebaseGeography({ ...base, fetcher: async () => Response.json([{ readTime: new Date(end + 10000).toISOString() }]) });
   assert.equal(empty.publicSongPosts, 0);
 });
-test('hosted geography proxy validates and strips private fields', async () => {
+test('hosted geography fails closed without a snapshot binding', async () => {
   assert.equal((await handleGeography({ env: {} })).status, 503);
-  const value = aggregateSongGeography([post()], end);
-  const response = await handleGeography({ env: { ECHO_GEOGRAPHY_URL: 'https://example.org/geo', ECHO_API_TOKEN: 'server-only' } }, async () => Response.json({ ...value, token: 'private' }));
-  assert.equal(response.status, 200); assert.deepEqual(await response.json(), value);
 });
 test('local geography snapshot is shared across visitors and refreshed on the next hour', async () => {
   let now = end + 1000, reads = 0;
