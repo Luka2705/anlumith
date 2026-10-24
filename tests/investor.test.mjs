@@ -56,14 +56,8 @@ test('contact validation rejects malformed input and header injection', () => {
   assert.equal(validateInquiry({ ...inquiry, apiKey: 'private' }).apiKey, undefined);
 });
 const environment = { ECHO_METRICS_URL: 'https://example.org/metrics', ECHO_CONTACT_URL: 'https://example.org/contact', ECHO_API_TOKEN: 'server-secret' };
-test('metrics proxy fails closed and never exposes upstream private fields or errors', async () => {
+test('metrics route fails closed without a snapshot binding and rejects mutations', async () => {
   assert.equal((await handleMetrics({ env: {} })).status, 503);
-  const result = await handleMetrics({ env: environment }, async (url, options) => {
-    assert.equal(options.headers.Authorization, 'Bearer server-secret');
-    return Response.json({ ...live, credentials: 'private' });
-  });
-  assert.equal(result.status, 200); assert.equal((await result.json()).credentials, undefined);
-  assert.equal((await handleMetrics({ env: environment }, async () => Response.json({ secret: 'private' }, { status: 500 }))).status, 503);
   assert.equal((await metricsRoute({ request: new Request('https://site.test/api/metrics', { method: 'POST' }) })).status, 405);
 });
 const context = (body = inquiry, headers = {}, env = environment) => ({ env, request: new Request('https://site.test/api/contact', { method: 'POST', headers: { Origin: 'https://site.test', 'Content-Type': 'application/json', ...headers }, body: JSON.stringify(body) }) });

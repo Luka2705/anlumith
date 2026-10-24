@@ -6,7 +6,63 @@
   "assets": {
     "directory": "./dist",
     "binding": "ASSETS",
-    "run_worker_first": ["/api", "/api/*"],
+    "run_worker_first": [
+      "/api",
+      "/api/*"
+    ],
     "not_found_handling": "404-page"
+  },
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "WEBSITE_SNAPSHOTS",
+        "class_name": "WebsiteSnapshots"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "website-snapshots-v1",
+      "new_sqlite_classes": [
+        "WebsiteSnapshots"
+      ]
+    }
+  ],
+  "ratelimits": [
+    {
+      "name": "PUBLIC_DATA_LIMITER",
+      "namespace_id": "1001",
+      "simple": {
+        "limit": 30,
+        "period": 60
+      }
+    }
+  ],
+  "limits": {
+    "cpu_ms": 50
+  },
+  "env": {
+    "dev": {
+      "name": "anlumith-data-dev",
+      "workers_dev": true,
+      "durable_objects": {
+        "bindings": [
+          {
+            "name": "WEBSITE_SNAPSHOTS",
+            "class_name": "WebsiteSnapshots"
+          }
+        ]
+      },
+      "ratelimits": [
+        {
+          "name": "PUBLIC_DATA_LIMITER",
+          "namespace_id": "1002",
+          "simple": {
+            "limit": 30,
+            "period": 60
+          }
+        }
+      ]
+    }
   }
 }
