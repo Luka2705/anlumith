@@ -48,7 +48,7 @@ test('localized investor summaries, compact map, legal routes and locale prefere
       assert.ok(markup.includes(translation.proofDetails.replaceAll('&', '&amp;')), locale);
       for (const title of ['proofAcquisitionTitle', 'proofParticipationTitle', 'proofSharingTitle']) assert.ok(markup.includes(translation[title]), locale);
       assert.ok(!markup.includes(translation.storyEyebrow), locale);
-      assert.ok(markup.includes(translation.historical), locale);
+      assert.ok(markup.includes(translation.unavailable), locale);
       assert.ok(markup.includes(translation.unknownDate), locale);
       assert.ok(markup.includes(translation.formLabel), locale);
       assert.ok(markup.includes(`href="/${locale}/privacy"`), locale);
@@ -57,6 +57,7 @@ test('localized investor summaries, compact map, legal routes and locale prefere
       assert.equal((markup.match(/<desc>/g) || []).length, 1, locale);
       assert.ok(markup.includes(translation.geoNoData), locale);
       assert.ok(markup.includes('community-map-svg'), locale);
+      assert.match(markup, /<path[^>]+d="M[^\"]+"[^>]+class="community-map-land"/, `${locale}: land is rendered before any API request`);
       assert.ok(!markup.includes('class="community-map-dot'), locale);
       assert.ok(!markup.includes(translation.geoLive), `${locale}: no live claim before verification`);
       assert.ok(!markup.includes(translation.geoRegionList), locale);
@@ -64,7 +65,8 @@ test('localized investor summaries, compact map, legal routes and locale prefere
       assert.ok(!markup.includes('onPointerDown') && !markup.includes('data-zoomed'), locale);
       assert.ok(markup.includes('type="email"') && markup.includes('autoComplete="email"'), locale);
       assert.ok(markup.includes('aria-current="true"'), locale);
-      assert.ok(markup.includes(formatNumber(27815, locale)), locale);
+      assert.ok(!markup.includes(formatNumber(27815, locale)), `${locale}: no historical fallback numbers`);
+      assert.ok(markup.includes('—'), `${locale}: unavailable values remain empty`);
       for (const [page, title] of [['privacy', 'privacyTitle'], ['imprint', 'legalTitle'], ['cookies', 'storageTitle']]) {
         window.location.pathname = `/${locale}/${page}`;
         assert.ok(renderToStaticMarkup(createElement(Investor)).includes(translation[title]), `${locale}/${page}`);

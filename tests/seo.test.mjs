@@ -135,7 +135,7 @@ test('production renderer emits complete localized content without browser globa
       assert.ok(brief.split(strings.organicGrowth).length - 1 >= 3, `${locale}: investor introduction, evidence and contact repeat the organic message`);
       assert.ok(brief.includes(strings.organicSource), `${locale}: investor provenance`);
       assert.ok(brief.includes(strings.founderTitle));
-      assert.ok(brief.includes(strings.historical));
+      assert.ok(brief.includes(strings.unavailable));
       assert.equal((brief.match(/<h1\b/g) || []).length, 1);
       assert.ok(!brief.includes('undefined'));
     }

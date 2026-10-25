@@ -1,3 +1,5 @@
+import { snapshotFixture } from './fixtures/public-snapshot.mjs';
+import { createSnapshotReader } from '../src/investor/public-snapshot.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFirebaseMetrics, SNAPSHOT_FIELDS } from '../server/firebase-metrics.js';
@@ -44,19 +46,19 @@ function invoke(handler, overrides = {}) {
     handler(overrides instanceof Readable ? overrides : { url: '/metrics', method: 'GET', headers: { host: '127.0.0.1:4173' }, ...overrides }, response).catch(reject);
   });
 }
-test('local API coalesces requests, caches briefly, refreshes, and rejects cross-origin access', async () => {
-  let calls = 0, clock = 1000;
+test('local API coalesces requests, shares the public hourly file, refreshes, and rejects cross-origin access', async () => {
+  let calls = 0, clock = Math.floor(Date.now() / 3600000) * 3600000 + 1000;
   const handler = createLocalApi({ configuration: { localMetricsSource: 'firebase-cli', firebaseProjectId: 'echo-ee3bf' }, clock: () => clock,
-    readMetrics: async options => { calls++; assert.equal(options.projectId, 'echo-ee3bf'); return { source: 'firebase', generatedAt: time }; } });
+    readSnapshot: createSnapshotReader({ clock: () => clock, fetcher: async () => { calls++; return Response.json(snapshotFixture(clock)); } }) });
   const results = await Promise.all([invoke(handler), invoke(handler)]);
   assert.equal(calls, 1); assert.equal(results[0].status, 200); assert.equal(results[1].status, 200);
   await invoke(handler); assert.equal(calls, 1);
-  clock += 60001; await invoke(handler); assert.equal(calls, 2);
+  clock += 3600000 + 5 * 60000; await invoke(handler); assert.equal(calls, 2);
   assert.equal((await invoke(handler, { headers: { host: 'evil.test' } })).status, 403);
   assert.equal((await invoke(handler, { headers: { host: 'localhost:4173', origin: 'https://evil.test' } })).status, 403);
   assert.equal((await invoke(handler, { method: 'POST' })).status, 405);
   assert.equal((await invoke(handler, { url: '/contact' })).status, 405);
-  const failed = createLocalApi({ configuration: { localMetricsSource: 'firebase-cli' }, readMetrics: async () => { throw new Error('PRIVATE CREDENTIAL DETAILS'); } });
+  const failed = createLocalApi({ configuration: { localMetricsSource: 'firebase-cli' }, readSnapshot: async () => { throw new Error('PRIVATE CREDENTIAL DETAILS'); } });
   const result = await invoke(failed); assert.equal(result.status, 503); assert.equal(JSON.stringify(result).includes('PRIVATE'), false);
 });
 

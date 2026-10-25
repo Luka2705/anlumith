@@ -1,3 +1,5 @@
+> Current production data path (2026-10-25): the map and metrics download the public hourly ECHO JSON file. No visitor-triggered Firebase query or private backend token is used. See [PUBLIC-ECHO-SNAPSHOT.md](PUBLIC-ECHO-SNAPSHOT.md). Earlier proxy/Firestore setup notes below are historical.
+
 # Global community map
 
 The home and investor pages show a compact world map of public song-sharing activity during a rolling 72-hour snapshot. The local server reads Firebase; a hosted adapter is prepared but not deployed. No example or random dots are substituted when data is unavailable.
@@ -24,6 +26,16 @@ The green “Live view · past 72 hours” label appears only after valid Fireba
 Design references: [Apple HIG Maps](https://developer.apple.com/design/human-interface-guidelines/maps), [Apple HIG Color](https://developer.apple.com/design/human-interface-guidelines/color), and [D3 geographic projections](https://d3js.org/d3-geo/projection). Red indicates post locations, not an error status. The display describes recorded posting locations, not nationality or residence.
 
 ## Runtime and deployment
+
+### Reliability fix — October 25, 2026
+
+Land geometry now lives in `src/assets/world-land.json` and is bundled and prerendered with the page. The basemap no longer depends on a separate `/maps/world-land.geojson` request and remains visible when the song API fails. Attribution remains at `/maps/ATTRIBUTION.txt`.
+
+Both metrics and geography retry failed requests after one minute and refresh on return to a visible tab or restored connectivity. Successful requests retain the hourly cadence. The geography proxy allows 65 seconds for the Firebase function (whose configured timeout is 60 seconds); the browser allows 75 seconds, avoiding the former premature 20-second proxy timeout.
+
+Run `npm run check:live -- https://www.anlumith.com` after Cloudflare deployment. It checks both public APIs for JSON, valid Firebase snapshots and freshness. A `not_configured` response identifies missing server bindings; HTML instead of JSON indicates that the API function is not being served. Backend failures require checking Firebase logs and the URL/token configuration. This command does not print credentials or raw data.
+
+A GitHub push can deploy the Pages code, but it cannot create the Firebase functions or the Cloudflare `ECHO_GEOGRAPHY_URL`, `ECHO_METRICS_URL` and `ECHO_API_TOKEN` bindings. Verify those separately using the setup in `INVESTOR.md`.
 
 Locally, `server/firebase-geography.js` uses the existing Firebase CLI login on the server only. `server/local-api.js` exposes the loopback-only `/api/geography` route with Host/Origin checks. It performs no Firebase writes and does not copy authentication tokens into files or browser code.
 

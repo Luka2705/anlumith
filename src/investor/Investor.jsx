@@ -2,11 +2,13 @@ import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ArrowUpRight, ArrowDown, ArrowLeftRight, CalendarDays, Compass, Plus, Globe2, RefreshCw, Sprout } from 'lucide-react';
 import i18n, { detectLocale, formatNumber, locales } from './i18n.js';
-import { historicalSnapshot, HOUR, METRICS, PERIODS, snapshotState, validateSnapshot } from './metrics.js';
+import { unavailableSnapshot, HOUR, METRICS, PERIODS, snapshotState } from './metrics.js';
+import { readPublicSnapshot } from './public-snapshot.js';
 import { company, musicBrand } from '../site.js';
 import { updateSeo } from './seo.js';
 import { getScreenshotImage } from './image-assets.js';
 import CommunityWorldMap from './CommunityWorldMap.jsx';
+import { scheduleSnapshotRefresh } from './snapshot-refresh.js';
 import { buildInquiryMailto } from './contact-schema.js';
 import './investor-proof.css';
 import './music-diary.css';
@@ -88,7 +90,7 @@ function InvestorBrief({ data, status, t, locale, n }) {
 }
 
 function useMetrics() {
-  const [data, setData] = useState(historicalSnapshot);
+  const [data, setData] = useState(unavailableSnapshot);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [now, setNow] = useState(Date.now());
@@ -99,21 +101,19 @@ function useMetrics() {
     const timeout = setTimeout(() => controller.abort(), 12000);
     setLoading(true); setError(false);
     try {
-      const response = await fetch('/api/metrics', { signal: controller.signal, cache: 'no-store' });
-      if (!response.ok || !response.headers.get('content-type')?.includes('application/json')) throw new Error('Unavailable');
-      const value = validateSnapshot(await response.json());
+      const { metrics: value } = await readPublicSnapshot();
       if (active.current === controller) {
         setData(previous => previous.generatedAt && previous.generatedAt > value.generatedAt ? previous : value);
         setNow(Date.now());
       }
-    } catch { if (active.current === controller) setError(true); }
+      return true;
+    } catch { if (active.current === controller) setError(true); return false; }
     finally { clearTimeout(timeout); if (active.current === controller) setLoading(false); }
   }
   useEffect(() => {
-    refresh();
-    const timer = setInterval(refresh, HOUR);
+    const stopRefresh = scheduleSnapshotRefresh(refresh, { interval: HOUR });
     const freshness = setInterval(() => setNow(Date.now()), 60000);
-    return () => { active.current?.abort(); active.current = null; clearInterval(timer); clearInterval(freshness); };
+    return () => { stopRefresh(); active.current?.abort(); active.current = null; clearInterval(freshness); };
   }, []);
   return { data, loading, error, refresh, state: snapshotState(data, now) };
 }
@@ -169,7 +169,7 @@ export default function Investor({ initialLocale, initialPath } = {}) {
   const [period, setPeriod] = useState('3m');
   const metrics = useMetrics();
   const { data } = metrics;
-  const n = value => formatNumber(value, locale);
+  const n = value => Number.isFinite(value) ? formatNumber(value, locale) : '—';
   const three = data.periods['3m'];
   const current = data.periods[period];
   const subpage = path.split('/').filter(Boolean)[1];

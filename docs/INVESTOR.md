@@ -1,3 +1,5 @@
+> Current data access (2026-10-25): homepage KPIs and maps now read the public hourly ECHO JSON file. See [PUBLIC-ECHO-SNAPSHOT.md](PUBLIC-ECHO-SNAPSHOT.md). The old metrics/geography token configuration below is superseded; contact delivery is unchanged.
+
 # echo music investor website
 
 ## Scope and routes

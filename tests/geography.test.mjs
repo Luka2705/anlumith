@@ -1,3 +1,5 @@
+import { snapshotFixture } from './fixtures/public-snapshot.mjs';
+import { createSnapshotReader, PUBLIC_SNAPSHOT_URL } from '../src/investor/public-snapshot.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { aggregateSongGeography, validateGeography, GEO_HOUR, GEO_MAX_POSTS, songCoordinates } from '../src/investor/geography.js';
@@ -68,19 +70,21 @@ test('query errors do not publish fake zero or partial points', async () => {
   const empty = await readFirebaseGeography({ ...base, fetcher: async () => Response.json([{ readTime: new Date(end + 10000).toISOString() }]) });
   assert.equal(empty.publicSongPosts, 0);
 });
-test('hosted geography proxy validates and strips private fields', async () => {
-  assert.equal((await handleGeography({ env: {} })).status, 503);
-  const value = aggregateSongGeography([post()], end);
-  const response = await handleGeography({ env: { ECHO_GEOGRAPHY_URL: 'https://example.org/geo', ECHO_API_TOKEN: 'server-only' } }, async () => Response.json({ ...value, token: 'private' }));
-  assert.equal(response.status, 200); assert.deepEqual(await response.json(), value);
+test('hosted geography route reads the fixed public file without a private backend token', async () => {
+  const fixture = snapshotFixture(); const value = fixture.geography; value.token = 'private';
+  const response = await handleGeography({ env: { ECHO_GEOGRAPHY_URL: 'https://example.org/geo', ECHO_API_TOKEN: 'server-only' } }, async (url, options) => {
+    assert.equal(url, PUBLIC_SNAPSHOT_URL); assert.equal(options.headers?.Authorization, undefined); return Response.json(fixture);
+  });
+  assert.equal(response.status, 200); assert.deepEqual(await response.json(), validateGeography(value));
+  assert.equal((await handleGeography({ env: {} }, async () => new Response('', { status: 404 }))).status, 503);
 });
 test('local geography snapshot is shared across visitors and refreshed on the next hour', async () => {
   let now = end + 1000, reads = 0;
   const handler = createLocalApi({ configuration: { firebaseProjectId: 'echo-ee3bf', localMetricsSource: 'firebase-cli' }, clock: () => now,
-    readGeography: async ({ now }) => { reads++; return aggregateSongGeography([post()], Math.floor(now / GEO_HOUR) * GEO_HOUR); } });
+    readSnapshot: createSnapshotReader({ clock: () => now, fetcher: async () => { reads++; return Response.json(snapshotFixture(now)); } }) });
   const invoke = () => new Promise(resolve => handler({ method: 'GET', url: '/geography', headers: { host: '127.0.0.1:4173' } }, {
     setHeader() {}, end(body) { resolve(JSON.parse(body)); },
   }));
   const [a, b] = await Promise.all([invoke(), invoke()]); assert.equal(reads, 1); assert.deepEqual(a, b);
-  now += GEO_HOUR; await invoke(); assert.equal(reads, 2);
+  now += GEO_HOUR + 5 * 60_000; await invoke(); assert.equal(reads, 2);
 });

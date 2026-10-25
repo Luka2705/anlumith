@@ -1,36 +1,10 @@
-import { readFirebaseMetrics } from './firebase-metrics.js';
-import { handleMetrics } from '../functions/api/metrics.js';
-import { readFirebaseGeography } from './firebase-geography.js';
-import { handleGeography } from '../functions/api/geography.js';
+import { readPublicSnapshot } from '../src/investor/public-snapshot.js';
 import { handleContact } from '../functions/api/contact.js';
 import { sendContactMail } from './contact-mail.js';
 import { Readable } from 'node:stream';
 
-export function createLocalApi({ configuration, env = {}, readMetrics = readFirebaseMetrics, readGeography = readFirebaseGeography, sendMail = sendContactMail, clock = Date.now }) {
+export function createLocalApi({ configuration, env = {}, readSnapshot = readPublicSnapshot, sendMail = sendContactMail, clock = Date.now }) {
   let contactHour, contactAttempts = 0;
-  let cached, expiresAt = 0, pending;
-  let cachedGeography, geographyExpiresAt = 0, pendingGeography;
-  async function geography() {
-    if (cachedGeography && clock() < geographyExpiresAt) return cachedGeography;
-    if (pendingGeography) return pendingGeography;
-    const now = clock();
-    pendingGeography = (async () => {
-      const value = await readGeography({ projectId: configuration.firebaseProjectId, now });
-      cachedGeography = value; geographyExpiresAt = Math.floor(now / 3600000) * 3600000 + 3600000;
-      return value;
-    })();
-    try { return await pendingGeography; } finally { pendingGeography = undefined; }
-  }
-  async function metrics() {
-    if (cached && clock() < expiresAt) return cached;
-    if (pending) return pending;
-    pending = (async () => {
-      const value = await readMetrics({ projectId: configuration.firebaseProjectId });
-      cached = value; expiresAt = clock() + 60000;
-      return value;
-    })();
-    try { return await pending; } finally { pending = undefined; }
-  }
   return async (request, response) => {
     const send = (body, status = 200) => {
       response.statusCode = status;
@@ -66,19 +40,8 @@ export function createLocalApi({ configuration, env = {}, readMetrics = readFire
     if (!isGeography && path !== '/metrics' && path !== '/metrics/') { send({ error: 'not_configured' }, 503); return; }
     if (request.method !== 'GET') { response.setHeader('Allow', 'GET'); send({ error: 'method_not_allowed' }, 405); return; }
     try {
-      if (isGeography) {
-        if (env.ECHO_GEOGRAPHY_URL && env.ECHO_API_TOKEN) {
-          const upstream = await handleGeography({ env }); send(await upstream.json(), upstream.status);
-        } else if (configuration.localMetricsSource === 'firebase-cli') send(await geography());
-        else send({ error: 'not_configured' }, 503);
-        return;
-      }
-      if (env.ECHO_METRICS_URL && env.ECHO_API_TOKEN) {
-        const upstream = await handleMetrics({ env });
-        send(await upstream.json(), upstream.status);
-      } else if (configuration.localMetricsSource === 'firebase-cli') {
-        send(await metrics());
-      } else send({ error: 'not_configured' }, 503);
+      const value = await readSnapshot();
+      send(isGeography ? value.geography : value.metrics);
     } catch { send({ error: 'unavailable' }, 503); }
   };
 }

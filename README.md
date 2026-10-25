@@ -1,6 +1,6 @@
 # ANLUMITH
 
-echo music investor V2 is implemented in the existing React/Vite app at `/en`, `/de`, and `/es`. The company homepage is retained at `/company/`. See [Investor implementation and integration](docs/INVESTOR.md) for data provenance, Firebase/Pages setup, localization, checks and remaining release requirements. Run `npm test` and `npm run build` for local verification. Local metrics now read echo music's existing hourly Firestore cache server-side using the installed Firebase CLI login; the supplied historical snapshot is a labeled fallback. Hosted metrics and online email delivery still require deployment configuration.
+echo music's investor website uses the existing React/Vite app at `/en`, `/de` and `/es`. The company homepage remains at `/company/`. Cards and maps share one anonymous download of ECHO's public hourly JSON file; browser visits cannot read the database or start generation. See [public data access and verification](docs/PUBLIC-ECHO-SNAPSHOT.md). Run `npm test` and `npm run build:production` before publishing.
 
 SEO now prerenders complete HTML, includes `/en/investors`, `/de/investors`, `/es/investors`, responsive images, social previews and Apple app banners. Read [SEO implementation and release requirements](docs/SEO.md) and the [30-day investor growth plan](docs/INVESTOR-GROWTH.md). Validate the built pages with `npm run check:seo`. Search indexing remains blocked until the existing release requirements and canonical domain are completed.
 
@@ -38,16 +38,16 @@ MyBasar verwendet das ShoppingBag-Icon aus Lucide. Weitere Produkte können in `
 **Aktuelles Hosting: Cloudflare Workers.** `wrangler.jsonc` verbindet `dist/` mit
 `server/worker.js`. Dieser Einstieg stellt `/api/geography`, `/api/metrics` und
 `/api/contact` bereit; das Verzeichnis `functions/` allein wird von Workers nicht
-ausgeführt. Nach dem Build mit `npx wrangler deploy` veröffentlichen. Die
-serverseitigen Bindings `ECHO_GEOGRAPHY_URL`, `ECHO_METRICS_URL` und
-`ECHO_API_TOKEN` müssen auf die bereitgestellten Firebase-Endpunkte zeigen
-(siehe [Investor-Anbindung](docs/INVESTOR.md#connect-cloudflare-pages-functions)).
-Ohne diese Bindings antworten die Daten-Endpunkte mit 503; echte Daten erfordern
-zusätzlich die Firebase-Bereitstellung. Der folgende Pages-Leitfaden beschreibt
-die ursprünglich geplante, alternative Hosting-Variante.
+ausgeführt. Der bestehende GitHub-Produktionsbranch `main` ist mit Workers Builds
+verbunden; ein erfolgreicher Build veröffentlicht die Website. Alternativ steht
+mit einer passenden Cloudflare-Anmeldung `npx wrangler deploy` zur Verfügung.
+Kennzahlen und Karte brauchen keine `ECHO_*`-Secrets mehr: Sie lesen ausschließlich
+die öffentliche ECHO-Datei. Die Kompatibilitätsrouten liefern denselben Dateistand.
+Kontaktfunktionen behalten ihre bisherige Konfiguration. Der Pages-Leitfaden
+beschreibt eine frühere Hosting-Alternative.
 
 ```sh
-npm run build
+npm run build:production
 ```
 
 Vite erzeugt die Website in `dist/`. Nur diesen Ordner veröffentlicht Cloudflare. Zum Testen des Builds: `npm run preview` (vorher den Entwicklungsserver stoppen, beide nutzen Port 4173).

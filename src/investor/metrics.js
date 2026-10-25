@@ -12,6 +12,11 @@ export const historicalSnapshot = {
     '3m': { newUsers: 12570, activeUsers: 13299, contributors: 5198, sharedSongs: 6112 },
   }, growth24h: 51.5,
 };
+// Empty first render: numbers only become visible after a valid public file.
+export const unavailableSnapshot = {
+  source: 'unavailable', generatedAt: null, totalUsers: null, growth24h: null,
+  periods: Object.fromEntries(PERIODS.map(period => [period, Object.fromEntries(METRICS.map(key => [key, null]))])),
+};
 const count = value => Number.isSafeInteger(value) && value >= 0;
 export function validateSnapshot(value, now = Date.now()) {
   if (!value || value.schemaVersion !== 1 || value.source !== 'firebase' ||
@@ -28,5 +33,6 @@ export function validateSnapshot(value, now = Date.now()) {
     growth24h: Number.isFinite(value.growth24h) ? value.growth24h : null };
 }
 export function snapshotState(snapshot, now = Date.now()) {
+  if (snapshot.source === 'unavailable') return 'unavailable';
   return snapshot.source !== 'firebase' ? 'historical' : now - snapshot.generatedAt > 2 * HOUR ? 'stale' : 'live';
 }

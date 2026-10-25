@@ -17,13 +17,13 @@
   },
   "legal": {
     "reviewed": true,
-    "updated": "21. September 2026",
+    "updated": "25. Oktober 2026",
     "disputeResolution": "",
-    "hostingRetention": "",
+    "hostingRetention": "Technische Zugriffs- und Sicherheitsprotokolle werden für sieben Tage gespeichert und anschließend gelöscht beziehungsweise anonymisiert.",
     "emailProvider": "Apple iCloud Mail. Anbieter für Nutzer im Europäischen Wirtschaftsraum ist Apple Distribution International Limited, Hollyhill Industrial Estate, Hollyhill, Cork, Irland.",
-    "emailInternationalTransfers": "",
-    "cloudflareTransferSafeguards": "",
-    "cloudflareCookies": "",
+    "emailInternationalTransfers": "Bei der Nutzung von Apple iCloud Mail können personenbezogene Daten außerhalb des Europäischen Wirtschaftsraums, insbesondere in den USA, verarbeitet werden. Apple nennt für internationale Übermittlungen von EWR-Daten EU-Standardvertragsklauseln. Weitere Informationen und eine Bezugsmöglichkeit dieser Klauseln enthält Apples Datenschutzrichtlinie unter https://www.apple.com/legal/privacy/en-ww/.",
+    "cloudflareTransferSafeguards": "Cloudflare verarbeitet personenbezogene Daten auf Grundlage seines Data Processing Addendums. Übermittlungen in die USA erfolgen nach Maßgabe des EU-US Data Privacy Frameworks; soweit erforderlich gelten die im Vertrag vorgesehenen EU-Standardvertragsklauseln und ergänzenden Schutzmaßnahmen. Weitere Informationen und die Vertragsbedingungen sind unter https://www.cloudflare.com/cloudflare-customer-dpa/ abrufbar.",
+    "cloudflareCookies": "Cloudflare verwendet das Cookie __cf_bm zur Erkennung und Abwehr automatisierter Zugriffe. Es läuft nach 30 Minuten ununterbrochener Inaktivität ab.",
     "dataProtectionOfficer": ""
   },
   "products": [

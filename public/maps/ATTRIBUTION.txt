@@ -1,6 +1,6 @@
 Made with Natural Earth.
 
-Asset: world-land.geojson
+Asset: src/assets/world-land.json (bundled into the website)
 Dataset: Natural Earth, Land polygons including major islands, 1:110 million.
 Authors: Natural Earth contributors; primary authors Tom Patterson and Nathaniel Vaughn Kelso.
 License: Public domain. Commercial use, modification, and redistribution are permitted;

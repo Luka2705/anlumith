@@ -38,7 +38,7 @@ export default defineConfig(({ mode, isPreview }) => {
       if (site.domain && !isDraft) this.emitFile({ type: 'asset', fileName: 'sitemap.xml', source: sitemapXml(site.domain, routes) });
       this.emitFile({ type: 'asset', fileName: '_routes.json', source: JSON.stringify({ version: 1, include: ['/api/*'], exclude: [] }) });
       this.emitFile({ type: 'asset', fileName: '_redirects', source: investorRoutes.filter(route => route !== '/').map(route => `${route}/ ${route} 301`).join('\n') + '\n' });
-      this.emitFile({ type: 'asset', fileName: '_headers', source: `/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: no-referrer\n  X-Frame-Options: DENY\n  Permissions-Policy: camera=(), microphone=(), geolocation=()\n  Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'\n${isDraft ? '  X-Robots-Tag: noindex, nofollow\n' : ''}` });
+      this.emitFile({ type: 'asset', fileName: '_headers', source: `/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: no-referrer\n  X-Frame-Options: DENY\n  Permissions-Policy: camera=(), microphone=(), geolocation=()\n  Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self'; connect-src 'self' https://firebasestorage.googleapis.com; base-uri 'none'; form-action 'none'; frame-ancestors 'none'\n${isDraft ? '  X-Robots-Tag: noindex, nofollow\n' : ''}` });
     },
     async closeBundle() {
       if (!building) return;

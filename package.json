@@ -10,7 +10,8 @@
     "preview": "vite preview",
     "test": "node --test tests/*.test.mjs",
     "images:optimize": "node scripts/optimize-images.mjs",
-    "check:seo": "node scripts/check-seo.mjs"
+    "check:seo": "node scripts/check-seo.mjs",
+    "check:live": "node scripts/check-live.mjs"
   },
   "engines": {
     "node": ">=22.12.0"
