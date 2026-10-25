@@ -1,4 +1,5 @@
 .community-map-section{background:#171b1d;border-block:1px solid #343b3e;padding-block:56px}
+.community-map-kpi{margin:25px 0 0;padding-top:20px;border-top:1px solid #374147}.community-map-kpi dt{font-size:13px;color:#cbd4d8}.community-map-kpi dd{margin:8px 0;font-size:clamp(36px,4vw,54px);font-weight:600;line-height:1.1;letter-spacing:-.04em;color:#fff}.community-map-kpi small,.community-map-kpi p{font-size:11px;line-height:1.7;color:#aab5ba}.community-map-kpi p{margin:5px 0 0}
 .community-map-layout{display:grid;grid-template-columns:minmax(220px,.85fr) minmax(0,1.6fr);align-items:center;gap:60px}
 .community-map-heading .echo-eyebrow{color:#acb8bc;margin-bottom:20px}.community-map-heading .echo-eyebrow svg{color:#ff5149;flex-shrink:0}
 .community-map-heading .display-heading{font-size:clamp(30px,3vw,43px);max-width:380px;margin-bottom:18px}.community-map-heading .section-body{max-width:360px;margin-bottom:22px;color:#aab5ba;font-size:13px}

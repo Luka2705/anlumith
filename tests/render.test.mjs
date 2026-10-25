@@ -14,7 +14,7 @@ test('localized investor summaries, compact map, legal routes and locale prefere
   const server = await createServer({ server: { middlewareMode: true, ws: false, hmr: false }, appType: 'custom' });
   try {
     const { default: Investor } = await server.ssrLoadModule('/src/investor/Investor.jsx');
-    const { isLiveMapSnapshot } = await server.ssrLoadModule('/src/investor/CommunityWorldMap.jsx');
+    const { isLiveMapSnapshot, LocatedPostsKpi } = await server.ssrLoadModule('/src/investor/CommunityWorldMap.jsx');
     const now = Date.now(), snapshot = { source: 'firebase', generatedAt: now - 3_600_000 };
     assert.equal(isLiveMapSnapshot(null, { now, landReady: true }), false);
     assert.equal(isLiveMapSnapshot(snapshot, { now, landReady: true }), true);
@@ -22,6 +22,19 @@ test('localized investor summaries, compact map, legal routes and locale prefere
     assert.equal(isLiveMapSnapshot(snapshot, { now, landReady: true, failed: true }), false);
     assert.equal(isLiveMapSnapshot({ ...snapshot, generatedAt: now - 3 * 3_600_000 }, { now, landReady: true }), false);
     const { default: i18n, detectLocale, formatNumber } = await server.ssrLoadModule('/src/investor/i18n.js');
+    for (const [locale, translation] of Object.entries({ en, de, es })) {
+      await i18n.changeLanguage(locale);
+      const renderKpi = data => renderToStaticMarkup(createElement(LocatedPostsKpi, { data, locale, t: i18n.t.bind(i18n) }));
+      const located = renderKpi({ locatedSongPosts: 3, publicSongPosts: 4 });
+      assert.ok(located.includes(translation.geoLocated), `${locale}: GPS label`);
+      assert.ok(located.includes(translation.geoLocatedPeriod), `${locale}: public 72h window`);
+      assert.match(located, /<dd>3<\/dd>/);
+      assert.match(located, /75 %/);
+      assert.match(renderKpi({ locatedSongPosts: 0, publicSongPosts: 0 }), /<dd>0<\/dd>/);
+      assert.doesNotMatch(renderKpi({ locatedSongPosts: 0, publicSongPosts: 0 }), /NaN|Infinity/);
+      assert.match(renderKpi(null), /<dd>—<\/dd>/);
+      assert.ok(renderKpi(null).includes(translation.geoLocatedUnavailable));
+    }
     assert.equal(detectLocale('/', ['fr-FR']), 'en');
     assert.equal(detectLocale('/', ['de-DE', 'en']), 'de');
     values.set('echo-language', 'es');
