@@ -19,6 +19,18 @@ export function isLiveMapSnapshot(data, { now = Date.now(), landReady = false, f
   return Boolean(data?.source === 'firebase' && landReady && !failed && data.generatedAt <= now && now - data.generatedAt <= 2 * GEO_HOUR);
 }
 
+export function LocatedPostsKpi({ data, locale, t }) {
+  const n = value => formatNumber(value, locale);
+  return (
+        <dl className="community-map-kpi" aria-live="polite" aria-atomic="true">
+          <div><dt>{t('geoLocated')}</dt><dd>{data ? n(data.locatedSongPosts) : '—'}</dd>
+            <small>{t('geoLocatedPeriod')}</small>
+            <p>{data ? t('geoLocatedShare', { total: n(data.publicSongPosts), share: data.publicSongPosts ? n(Math.round(data.locatedSongPosts / data.publicSongPosts * 100)) + ' %' : '—' }) : t('geoLocatedUnavailable')}</p>
+          </div>
+        </dl>
+  );
+}
+
 export default function CommunityWorldMap({ locale, t, embedded = false }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -59,6 +71,7 @@ export default function CommunityWorldMap({ locale, t, embedded = false }) {
         <h2 id="community-map-title" className="display-heading">{t('geoTitle')}</h2><p className="section-body">{t('geoIntro')}</p>
         <p className={`community-map-live${live ? ' is-live' : ''}`} aria-live="polite"><i aria-hidden="true" />{t(data ? live ? 'geoLive' : 'geoStale' : 'geoPeriod')}</p>
         <p className="community-map-cadence">{t('geoHourly')}</p>
+        <LocatedPostsKpi data={data} locale={locale} t={t} />
       </div>
       <div className="community-map-preview">
         <figure className="community-map-figure" aria-busy={loading}>
