@@ -109,3 +109,12 @@ anlumith`. Direct Wrangler credentials are unavailable locally; the already
 configured GitHub production build provides the authenticated publication path.
 The live browser smoke must use the delivered CSP unmodified (local previews
 apply the generated CSP explicitly). No Firebase/backend deployment is required.
+
+
+Production compatibility follow-up: live browser checks passed, but the legacy
+API routes returned 503. Running the actual local Workers runtime reproduced
+the issue: Workers does not implement Fetch `redirect: error`. Changed the fixed
+file fetch to `redirect: manual`; the existing `response.ok` check rejects every
+redirect, including opaque browser redirects, without following another URL.
+The regression also covers HTTP 302. Worker-only diagnostics identify failures
+of this public, credential-free file read without exposing private request data.

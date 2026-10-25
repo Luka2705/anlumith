@@ -12,7 +12,7 @@ test('cards and maps share one anonymous download until the next hourly publicat
   let finish;
   const reader = createSnapshotReader({ clock: () => now, fetcher: async (url, options) => {
     calls++; assert.equal(url, PUBLIC_SNAPSHOT_URL); assert.equal(options.credentials, 'omit');
-    assert.equal(options.headers?.Authorization, undefined); assert.equal(options.redirect, 'error');
+    assert.equal(options.headers?.Authorization, undefined); assert.equal(options.redirect, 'manual');
     await new Promise(resolve => { finish = resolve; }); return Response.json(snapshotFixture(now));
   } });
   const metrics = reader(), map = reader(); assert.equal(calls, 1); finish();
@@ -32,7 +32,7 @@ test('file errors and malformed data fail closed without credential or database 
   const fixture = snapshotFixture();
   for (const value of [{}, { ...fixture, generatedAt: hour + HOUR }, { ...fixture, geography: { ...fixture.geography, generatedAt: hour - HOUR } },
     { ...fixture, metrics: { ...fixture.metrics, source: 'historical' } }]) assert.throws(() => validatePublicSnapshot(value));
-  for (const response of [new Response('missing', { status: 404 }), new Response('<html>error</html>'), Response.json({})]) {
+  for (const response of [new Response('missing', { status: 404 }), new Response('', { status: 302, headers: { Location: 'https://example.invalid/database' } }), new Response('<html>error</html>'), Response.json({})]) {
     await assert.rejects(createSnapshotReader({ fetcher: async () => response })());
   }
 });

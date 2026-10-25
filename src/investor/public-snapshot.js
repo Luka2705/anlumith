@@ -29,7 +29,7 @@ export function createSnapshotReader({ fetcher = fetch, clock = Date.now } = {})
     pending = (async () => {
       try {
         const response = await fetcher(PUBLIC_SNAPSHOT_URL, { credentials: 'omit', referrerPolicy: 'no-referrer',
-          signal: AbortSignal.timeout(10_000), redirect: 'error',
+          signal: AbortSignal.timeout(10_000), redirect: 'manual',
           cf: { cacheEverything: true, cacheTtl: 300 } });
         if (!response.ok || !response.headers.get('content-type')?.includes('application/json')) throw new Error('Public file unavailable');
         if (Number(response.headers.get('content-length')) > MAX_BYTES) throw new Error('Public file too large');
@@ -39,7 +39,8 @@ export function createSnapshotReader({ fetcher = fetch, clock = Date.now } = {})
         if (cached && value.generatedAt < cached.generatedAt) throw new Error('Public file generation regressed');
         cached = value; expires = nextSnapshotAt(clock(), value.generatedAt); failedUntil = 0;
         return value;
-      } catch {
+      } catch (error) {
+        if (typeof WebSocketPair !== 'undefined') console.warn('Public snapshot retrieval failed', error.name, error.message);
         failure = new Error('Public snapshot unavailable'); failedUntil = clock() + 60_000;
         throw failure;
       }
